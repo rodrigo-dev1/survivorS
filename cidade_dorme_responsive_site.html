@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cidade Dorme — Painel do Mestre</title>
+  <style>
+    :root {
+      --bg: #05070b;
+      --bg-2: #090d13;
+      --panel: rgba(12, 15, 20, 0.92);
+      --panel-2: rgba(20, 8, 10, 0.78);
+      --line: rgba(255, 255, 255, 0.11);
+      --line-red: rgba(255, 38, 38, 0.45);
+      --line-blue: rgba(96, 205, 255, 0.48);
+      --red: #ff2626;
+      --red-2: #9d1111;
+      --blue: #6fd7ff;
+      --blue-2: #119ce4;
+      --gold: #ffc943;
+      --purple: #c47cff;
+      --text: #f5f7fb;
+      --muted: #9ba7b8;
+      --good: #42cfff;
+      --bad: #ff3939;
+      --solo: #ffc22e;
+      --indep: #c47cff;
+      --success: #36e09f;
+      --radius: 18px;
+      --shadow-red: 0 0 24px rgba(255, 30, 30, 0.25);
+      --shadow-blue: 0 0 26px rgba(81, 196, 255, 0.28);
+      --sidebar-w: 248px;
+      --topbar-h: 86px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(43, 163, 255, 0.16), transparent 30%),
+        radial-gradient(circle at 82% 18%, rgba(255, 20, 20, 0.16), transparent 27%),
+        linear-gradient(135deg, rgba(4, 6, 11, 0.96), rgba(8, 10, 16, 0.98)),
+        #05070b;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(circle at center, black, transparent 78%);
+      opacity: 0.38;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      left: -15%;
+      right: -15%;
+      bottom: -18%;
+      height: 50%;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse at center, rgba(124, 215, 255, 0.13), transparent 48%),
+        linear-gradient(to top, rgba(255, 23, 23, 0.14), transparent 78%);
+      filter: blur(10px);
+      opacity: 0.8;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 18px 14px;
+      background:
+        linear-gradient(180deg, rgba(8, 10, 14, 0.98), rgba(5, 7, 10, 0.94)),
+        radial-gradient(circle at 50% 100%, rgba(255, 0, 0, 0.22), transparent 48%);
+      border-right: 1px solid var(--line);
+      box-shadow: inset -1px 0 rgba(255,255,255,0.03), 12px 0 40px rgba(0,0,0,0.28);
+      z-index: 20;
+    }
+
+    .sidebar-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 8px 22px;
+    }
+
+    .brand-mark {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(90deg, rgba(255, 28, 28, 0.95) 0 48%, rgba(52, 190, 255, 0.95) 52%),
+        #12161f;
+      color: white;
+      box-shadow: var(--shadow-red), var(--shadow-blue);
+      border: 1px solid rgba(255,255,255,0.26);
+      font-weight: 900;
+      letter-spacing: -0.08em;
+    }
+
+    .brand-copy strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .brand-copy span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border: 1px solid transparent;
+      border-radius: 14px;
+      color: rgba(245, 247, 251, 0.84);
+      background: transparent;
+      text-align: left;
+      transition: 180ms ease;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      color: #fff;
+      background: linear-gradient(90deg, rgba(162, 14, 14, 0.86), rgba(75, 8, 8, 0.32));
+      border-color: rgba(255, 45, 45, 0.38);
+      box-shadow: 0 0 24px rgba(255, 24, 24, 0.16);
+    }
+
+    .nav-icon {
+      width: 25px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 1.18rem;
+      opacity: 0.96;
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .sidebar-footer .crown {
+      font-size: 1.5rem;
+      color: var(--blue);
+      filter: drop-shadow(0 0 8px rgba(111,215,255,0.55));
+    }
+
+    .sidebar-footer strong {
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .sidebar-footer span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 20px clamp(14px, 2vw, 28px) 28px;
+    }
+
+    .topbar {
+      min-height: var(--topbar-h);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.048), rgba(255,255,255,0.018)),
+        radial-gradient(circle at 70% 0%, rgba(91, 198, 255, 0.14), transparent 42%);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.28);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .topbar::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(111,215,255,0.8), rgba(255,38,38,0.65), transparent);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid var(--line-blue);
+      background: rgba(30, 144, 214, 0.13);
+      color: var(--blue);
+      font-size: 1.4rem;
+      box-shadow: var(--shadow-blue);
+    }
+
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .title-wrap h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      font-size: clamp(1.35rem, 2.5vw, 2.35rem);
+      letter-spacing: 0.025em;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      font-size: 0.83rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .chip.red {
+      color: #ffd7d7;
+      border-color: rgba(255, 46, 46, 0.48);
+      background: rgba(133, 15, 15, 0.36);
+      box-shadow: 0 0 18px rgba(255, 30, 30, 0.18);
+    }
+
+    .chip.blue {
+      color: #dff7ff;
+      border-color: rgba(87, 206, 255, 0.48);
+      background: rgba(16, 95, 144, 0.28);
+      box-shadow: 0 0 18px rgba(81, 196, 255, 0.18);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .metric-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 104px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+        rgba(7, 10, 15, 0.86);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.22);
+    }
+
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      right: -45px;
+      bottom: -48px;
+      border-radius: 999px;
+      filter: blur(2px);
+      opacity: 0.24;
+    }
+
+    .metric-card.blue::before { background: var(--blue); }
+    .metric-card.red::before { background: var(--red); }
+    .metric-card.gold::before { background: var(--gold); }
+    .metric-card.purple::before { background: var(--purple); }
+
+    .metric-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      font-size: 1.75rem;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric-card.blue .metric-icon { color: var(--blue); box-shadow: var(--shadow-blue); }
+    .metric-card.red .metric-icon { color: #ff7676; box-shadow: var(--shadow-red); }
+    .metric-card.gold .metric-icon { color: var(--gold); box-shadow: 0 0 24px rgba(255,201,67,0.2); }
+    .metric-card.purple .metric-icon { color: var(--purple); box-shadow: 0 0 24px rgba(196,124,255,0.22); }
+
+    .metric-label {
+      margin: 0 0 3px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .metric-value {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.12rem;
+      line-height: 1;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.68fr) minmax(330px, 0.9fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.048), rgba(255,255,255,0.018)),
+        var(--panel);
+      box-shadow: 0 18px 46px rgba(0,0,0,0.27);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .panel.danger {
+      border-color: rgba(255, 47, 47, 0.28);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 20, 20, 0.11), transparent 42%),
+        var(--panel);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0,0,0,0.18);
+    }
+
+    .panel-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.18rem;
+      letter-spacing: 0.03em;
+    }
+
+    .panel-subtitle {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .panel-body {
+      padding: 16px 18px 18px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 13px;
+      border: 1px solid rgba(255,255,255,0.065);
+      background: rgba(0,0,0,0.16);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th, td {
+      padding: 12px 13px;
+      border-bottom: 1px solid rgba(255,255,255,0.075);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 0.9rem;
+    }
+
+    th {
+      color: #dce8f3;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255,255,255,0.035);
+      white-space: nowrap;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .role-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .role-ico {
+      width: 27px;
+      height: 27px;
+      border-radius: 9px;
+      display: inline-grid;
+      place-items: center;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.11);
+    }
+
+    .team-good, .text-good { color: var(--good); }
+    .team-bad, .text-bad { color: var(--bad); }
+    .team-solo, .text-solo { color: var(--solo); }
+    .team-indep, .text-indep { color: var(--indep); }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .status-badge.pending {
+      color: #ffb7b7;
+      background: rgba(255, 22, 22, 0.16);
+      border-color: rgba(255, 35, 35, 0.32);
+    }
+
+    .status-badge.done {
+      color: #bbffdf;
+      background: rgba(54, 224, 159, 0.12);
+      border-color: rgba(54, 224, 159, 0.32);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin: 0 0 7px;
+      color: #dce8f3;
+      font-size: 0.78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .field select,
+    .field input,
+    .field textarea {
+      width: 100%;
+      min-height: 45px;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 13px;
+      background: rgba(2, 5, 9, 0.72);
+      color: var(--text);
+      padding: 0 12px;
+      outline: none;
+      transition: 170ms ease;
+    }
+
+    .field textarea {
+      min-height: 86px;
+      padding-top: 12px;
+      resize: vertical;
+    }
+
+    .field select:focus,
+    .field input:focus,
+    .field textarea:focus {
+      border-color: rgba(111,215,255,0.78);
+      box-shadow: 0 0 0 3px rgba(111,215,255,0.12);
+    }
+
+    .button-stack {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 14px;
+      min-height: 46px;
+      padding: 0 16px;
+      color: white;
+      font-weight: 900;
+      letter-spacing: 0.025em;
+      transition: 180ms ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-blue {
+      background: linear-gradient(180deg, rgba(39, 154, 225, 0.92), rgba(8, 72, 122, 0.94));
+      border-color: rgba(111,215,255,0.52);
+      box-shadow: var(--shadow-blue);
+    }
+
+    .btn-red {
+      background: linear-gradient(180deg, rgba(220, 22, 22, 0.95), rgba(96, 8, 8, 0.96));
+      border-color: rgba(255,80,80,0.48);
+      box-shadow: var(--shadow-red);
+    }
+
+    .tabs-panel {
+      margin-top: 16px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 12px 12px 0;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      border-bottom-color: rgba(255,255,255,0.08);
+      border-radius: 14px 14px 0 0;
+      padding: 12px 16px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.03);
+      white-space: nowrap;
+      font-weight: 850;
+      transition: 170ms ease;
+    }
+
+    .tab-btn.active {
+      color: #e9fbff;
+      border-color: rgba(111,215,255,0.42);
+      background: linear-gradient(180deg, rgba(31, 130, 190, 0.24), rgba(255,255,255,0.04));
+      box-shadow: inset 0 2px 0 rgba(111,215,255,0.65);
+    }
+
+    .tab-content {
+      display: none;
+      padding: 16px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .lower-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 16px;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .event-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 68px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.035);
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .event-chip.red { border-color: rgba(255, 44, 44, 0.35); color: #ffb7b7; }
+    .event-chip.blue { border-color: rgba(111,215,255,0.35); color: #bff0ff; }
+    .event-chip.purple { border-color: rgba(196,124,255,0.35); color: #e7ceff; }
+    .event-chip.gold { border-color: rgba(255,201,67,0.35); color: #ffe6a0; }
+
+    .latest-panel {
+      margin-top: 16px;
+    }
+
+    .latest-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .latest-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      min-height: 78px;
+      padding: 13px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.035);
+      min-width: 0;
+    }
+
+    .latest-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(111,215,255,0.12);
+      border: 1px solid rgba(111,215,255,0.2);
+      color: var(--blue);
+      flex: 0 0 auto;
+    }
+
+    .latest-item strong {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .latest-item span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.79rem;
+    }
+
+    .history-btn {
+      min-width: 164px;
+      align-self: stretch;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.045);
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 15;
+      backdrop-filter: blur(3px);
+    }
+
+    .mobile-overlay.active {
+      display: block;
+    }
+
+    .only-mobile {
+      display: none;
+    }
+
+    @media (max-width: 1280px) {
+      .metrics-grid {
+        grid-template-columns: repeat(3, minmax(180px, 1fr));
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lower-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .events-grid {
+        grid-template-columns: repeat(3, minmax(130px, 1fr));
+      }
+
+      .latest-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .history-btn {
+        grid-column: 1 / -1;
+        min-height: 52px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: min(82vw, 310px);
+        transform: translateX(-110%);
+        transition: 220ms ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .mobile-menu-btn {
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .only-mobile {
+        display: inline-flex;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+      }
+
+      .title-wrap {
+        display: grid;
+        grid-template-columns: auto auto minmax(0, 1fr);
+      }
+
+      .status-row {
+        justify-content: flex-start;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .latest-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .main {
+        padding: 12px 10px 22px;
+      }
+
+      .topbar {
+        border-radius: 18px;
+        padding: 12px;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+      }
+
+      .title-wrap {
+        gap: 10px;
+      }
+
+      .title-wrap h1 {
+        font-size: 1.18rem;
+        white-space: normal;
+      }
+
+      .status-row {
+        gap: 8px;
+      }
+
+      .chip {
+        font-size: 0.75rem;
+        padding: 8px 10px;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .metric-card {
+        min-height: 82px;
+      }
+
+      .panel-header,
+      .panel-body,
+      .tab-content {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .panel-title {
+        font-size: 1.02rem;
+      }
+
+      table {
+        min-width: 680px;
+      }
+
+      th, td {
+        padding: 10px;
+        font-size: 0.82rem;
+      }
+
+      .events-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-btn {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Menu principal">
+      <div class="sidebar-top">
+        <div class="brand-mark">CD</div>
+        <div class="brand-copy">
+          <strong>Cidade Dorme</strong>
+          <span>Painel do Mestre</span>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active"><span class="nav-icon">✥</span>Dashboard</button>
+        <button class="nav-item"><span class="nav-icon">🎭</span>Funções</button>
+        <button class="nav-item"><span class="nav-icon">🕯️</span>Personagens</button>
+        <button class="nav-item"><span class="nav-icon">👥</span>Jogadores</button>
+        <button class="nav-item"><span class="nav-icon">♜</span>Partidas</button>
+        <button class="nav-item"><span class="nav-icon">⌛</span>Rodadas</button>
+        <button class="nav-item"><span class="nav-icon">📜</span>Histórico</button>
+        <button class="nav-item"><span class="nav-icon">⚙</span>Configurações</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="crown">♛</span>
+        <div>
+          <strong>Mestre</strong>
+          <span>Painel administrativo</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title-wrap">
+          <button class="mobile-menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
+          <div class="brand-mark">CD</div>
+          <h1>Cidade Dorme — Painel do Mestre</h1>
+        </div>
+
+        <div class="status-row">
+          <span class="chip red">⌁ Partida em andamento</span>
+          <span class="chip blue">✺ Rodada 3</span>
+          <span class="chip blue">☾ Fase: Noite</span>
+        </div>
+      </header>
+
+      <section class="metrics-grid" aria-label="Resumo da partida">
+        <article class="metric-card blue">
+          <div class="metric-icon">💙</div>
+          <div>
+            <p class="metric-label">Vivos</p>
+            <p class="metric-value">12</p>
+          </div>
+        </article>
+        <article class="metric-card red">
+          <div class="metric-icon">☠</div>
+          <div>
+            <p class="metric-label">Mortos</p>
+            <p class="metric-value">3</p>
+          </div>
+        </article>
+        <article class="metric-card blue">
+          <div class="metric-icon">🛡</div>
+          <div>
+            <p class="metric-label">Time Bem</p>
+            <p class="metric-value">7</p>
+          </div>
+        </article>
+        <article class="metric-card red">
+          <div class="metric-icon">🔥</div>
+          <div>
+            <p class="metric-label">Time Mal</p>
+            <p class="metric-value">4</p>
+          </div>
+        </article>
+        <article class="metric-card gold">
+          <div class="metric-icon">◉</div>
+          <div>
+            <p class="metric-label">Solo / Indep.</p>
+            <p class="metric-value">1</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Controle da Rodada</h2>
+              <p class="panel-subtitle">Ações pendentes da fase atual</p>
+            </div>
+            <span class="chip red">6 pendentes</span>
+          </div>
+
+          <div class="panel-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Função</th>
+                    <th>Jogador</th>
+                    <th>Ação</th>
+                    <th>Alvo</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="role-line text-bad"><span class="role-ico">🗡</span>Assassino</span></td>
+                    <td>Charles Magnus</td>
+                    <td>Alvo de time inimigo assassinado</td>
+                    <td>Haval Brinston</td>
+                    <td><span class="status-badge pending">● Pendente</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="role-line text-good"><span class="role-ico">✚</span>Médico/Enfermeira</span></td>
+                    <td>Xue Liang</td>
+                    <td>Salvar alvo</td>
+                    <td>—</td>
+                    <td><span class="status-badge pending">● Pendente</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="role-line text-good"><span class="role-ico">🔍</span>Detetive</span></td>
+                    <td>Haval Brinston</td>
+                    <td>Investigar jogador</td>
+                    <td>—</td>
+                    <td><span class="status-badge pending">● Pendente</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="role-line text-bad"><span class="role-ico">🦷</span>Dentista</span></td>
+                    <td>Kevin V. Fischer</td>
+                    <td>Silenciar alvo</td>
+                    <td>—</td>
+                    <td><span class="status-badge pending">● Pendente</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="role-line text-solo"><span class="role-ico">◎</span>Psicopata</span></td>
+                    <td>John Sponner</td>
+                    <td>Marcar alvo morto</td>
+                    <td>—</td>
+                    <td><span class="status-badge pending">● Pendente</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="role-line text-indep"><span class="role-ico">☼</span>Líder do Culto</span></td>
+                    <td>Cain Grave</td>
+                    <td>Converter único</td>
+                    <td>—</td>
+                    <td><span class="status-badge pending">● Pendente</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+        <aside class="panel danger">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Resolver Noite</h2>
+              <p class="panel-subtitle">Registrar ação e alvo</p>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <form class="form-grid" id="actionForm">
+              <div class="field">
+                <label for="actor">Ator</label>
+                <select id="actor">
+                  <option>Selecione o jogador</option>
+                  <option>Charles Magnus</option>
+                  <option>Xue Liang</option>
+                  <option>Haval Brinston</option>
+                  <option>Cain Grave</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="role">Função</label>
+                <select id="role">
+                  <option>Selecione a função</option>
+                  <option>Assassino</option>
+                  <option>Médico/Enfermeira</option>
+                  <option>Detetive</option>
+                  <option>Dentista</option>
+                  <option>Líder do Culto</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="target">Alvo</label>
+                <select id="target">
+                  <option>Selecione o alvo opcional</option>
+                  <option>Anthony Whitman</option>
+                  <option>Haval Brinston</option>
+                  <option>Rodrigo</option>
+                  <option>João</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="result">Resultado</label>
+                <select id="result">
+                  <option>Selecione o resultado</option>
+                  <option>Positivo</option>
+                  <option>Negativo</option>
+                  <option>Neutro</option>
+                </select>
+              </div>
+
+              <div class="button-stack">
+                <button type="submit" class="btn btn-blue">✎ Registrar Ação</button>
+                <button type="button" class="btn btn-red">☠ Resolver Rodada</button>
+              </div>
+            </form>
+          </div>
+        </aside>
+      </section>
+
+      <section class="panel tabs-panel">
+        <div class="tabs" role="tablist" aria-label="Dados do jogo">
+          <button class="tab-btn active" data-tab="funcoes" role="tab">🎭 Funções</button>
+          <button class="tab-btn" data-tab="personagens" role="tab">🕯️ Personagens</button>
+          <button class="tab-btn" data-tab="eventos" role="tab">📜 Eventos</button>
+        </div>
+
+        <div class="tab-content active" id="tab-funcoes">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Função</th>
+                  <th>Time</th>
+                  <th>Mecânica</th>
+                  <th>Alvos</th>
+                  <th>Execução</th>
+                  <th>Uso</th>
+                  <th>Período</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="text-bad">Assassinos</td><td class="team-bad">Mal</td><td>Assassinar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-bad">Dentista</td><td class="team-bad">Mal</td><td>Silenciar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-bad">Barman</td><td class="team-bad">Mal</td><td>Atordoar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-bad">Terrorista</td><td class="team-bad">Mal</td><td>Matar</td><td>Único</td><td>Opcional</td><td>Único</td><td>Dia</td></tr>
+                <tr><td class="text-good">Médico/Enfermeira</td><td class="team-good">Bem</td><td>Salvar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-good">Detetives</td><td class="team-good">Bem</td><td>Investigar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-good">Justiceiro</td><td class="team-good">Bem</td><td>Assassinar</td><td>Único</td><td>Opcional</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-good">Sonâmbula</td><td class="team-good">Bem</td><td>Salvar</td><td>Múltiplos</td><td>Opcional</td><td>Único</td><td>Noite</td></tr>
+                <tr><td class="text-good">Legista</td><td class="team-good">Bem</td><td>Descobrir</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-good">Coveiro</td><td class="team-good">Bem</td><td>Reviver</td><td>Único</td><td>Opcional</td><td>Único</td><td>Noite</td></tr>
+                <tr><td class="text-solo">Psicopata</td><td class="team-solo">Solo</td><td>Assassinar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-solo">Gambler</td><td class="team-solo">Solo</td><td>Marcação</td><td>Múltiplos</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+                <tr><td class="text-indep">Líder do Culto</td><td class="team-indep">Indep.</td><td>Converter</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-personagens">
+          <div class="lower-grid">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Personagem</th>
+                    <th>Função</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td class="text-good">Anthony Whitman</td><td>Coveiro</td><td class="team-good">Bem</td><td><span class="status-badge done">Vivo</span></td></tr>
+                  <tr><td class="text-good">Haval Brinston</td><td>Detetive</td><td class="team-good">Bem</td><td><span class="status-badge done">Vivo</span></td></tr>
+                  <tr><td class="text-good">Xue Liang</td><td>Enfermeira</td><td class="team-good">Bem</td><td><span class="status-badge done">Vivo</span></td></tr>
+                  <tr><td class="text-bad">Charles Magnus</td><td>Assassino</td><td class="team-bad">Mal</td><td><span class="status-badge done">Vivo</span></td></tr>
+                  <tr><td class="text-bad">Dmitry Smirnov</td><td>Barman</td><td class="team-bad">Mal</td><td><span class="status-badge done">Vivo</span></td></tr>
+                  <tr><td class="text-bad">Kevin V. Fischer</td><td>Dentista</td><td class="team-bad">Mal</td><td><span class="status-badge done">Vivo</span></td></tr>
+                  <tr><td class="text-solo">John Sponner</td><td>Psicopata</td><td class="team-solo">Solo</td><td><span class="status-badge done">Vivo</span></td></tr>
+                  <tr><td class="text-indep">Cain Grave</td><td>Líder do Culto</td><td class="team-indep">Indep.</td><td><span class="status-badge done">Vivo</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel danger" style="box-shadow:none;">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Configuração crítica</h3>
+                  <p class="panel-subtitle">Quem está vivo, morto ou convertido muda todo o cálculo da rodada.</p>
+                </div>
+              </div>
+              <div class="panel-body">
+                <p style="margin:0;color:var(--muted);line-height:1.6;">Na versão final, esta área será conectada ao Google Sheets e ao motor de regras em PyScript para atualizar automaticamente o status da partida.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="tab-eventos">
+          <div class="events-grid">
+            <div class="event-chip red">☠ Morte</div>
+            <div class="event-chip blue">🛡 Salvo</div>
+            <div class="event-chip red">🔇 Silenciado</div>
+            <div class="event-chip blue">🔍 Investigado</div>
+            <div class="event-chip purple">◉ Convertido</div>
+            <div class="event-chip gold">⌛ Atordoado</div>
+            <div class="event-chip blue">✚ Revivido</div>
+            <div class="event-chip red">🗳 Eliminado na votação</div>
+            <div class="event-chip purple">☾ Ação bloqueada</div>
+            <div class="event-chip blue">📣 Resultado público</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel latest-panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Últimos Eventos</h2>
+            <p class="panel-subtitle">Registro recente da partida</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="latest-list">
+            <div class="latest-item">
+              <span class="latest-icon">🛡</span>
+              <div>
+                <strong>Rodrigo foi salvo pelo Médico.</strong>
+                <span>Noite 2 • 22:15</span>
+              </div>
+            </div>
+            <div class="latest-item">
+              <span class="latest-icon">🔍</span>
+              <div>
+                <strong>João foi investigado pelo Detetive.</strong>
+                <span>Noite 2 • 22:14</span>
+              </div>
+            </div>
+            <div class="latest-item">
+              <span class="latest-icon">☠</span>
+              <div>
+                <strong>Nenhuma morte pública nesta noite.</strong>
+                <span>Noite 2 • 22:10</span>
+              </div>
+            </div>
+            <button class="history-btn">📜 Ver histórico</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const menuBtn = document.getElementById('menuBtn');
+    const overlay = document.getElementById('mobileOverlay');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const navItems = document.querySelectorAll('.nav-item');
+    const actionForm = document.getElementById('actionForm');
+
+    function openMenu() {
+      sidebar.classList.add('open');
+      overlay.classList.add('active');
+    }
+
+    function closeMenu() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('active');
+    }
+
+    menuBtn.addEventListener('click', openMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    navItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        navItems.forEach((nav) => nav.classList.remove('active'));
+        item.classList.add('active');
+        closeMenu();
+      });
+    });
+
+    tabButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = button.dataset.tab;
+        tabButtons.forEach((btn) => btn.classList.remove('active'));
+        tabContents.forEach((content) => content.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById(`tab-${target}`).classList.add('active');
+      });
+    });
+
+    actionForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const actor = document.getElementById('actor').value;
+      const role = document.getElementById('role').value;
+      const target = document.getElementById('target').value;
+      const result = document.getElementById('result').value;
+
+      const message = `Ação registrada: ${actor} / ${role} / ${target} / ${result}`;
+      console.log(message);
+      alert(message);
+    });
+  </script>
+</body>
+</html>
