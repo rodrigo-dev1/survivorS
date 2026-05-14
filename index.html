@@ -323,6 +323,8 @@
 
     .metric-label { margin: 0 0 3px; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 850; letter-spacing: 0.08em; }
     .metric-value { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 2.05rem; line-height: 1; }
+    .metric-score { margin: 8px 0 0; color: var(--muted); font-size: 0.82rem; font-weight: 850; }
+    .metric-score strong { color: var(--blue); }
 
     .grid-2 {
       display: grid;
@@ -593,11 +595,11 @@
       </header>
 
       <section class="metrics-grid" aria-label="Resumo da partida">
-        <article class="metric-card blue"><div class="metric-icon">💙</div><div><p class="metric-label">Vivos</p><p class="metric-value" id="metricAlive">0</p></div></article>
-        <article class="metric-card red"><div class="metric-icon">☠</div><div><p class="metric-label">Mortos</p><p class="metric-value" id="metricDead">0</p></div></article>
-        <article class="metric-card blue"><div class="metric-icon">🛡</div><div><p class="metric-label">Time Bem</p><p class="metric-value" id="metricGood">0</p></div></article>
-        <article class="metric-card red"><div class="metric-icon">🔥</div><div><p class="metric-label">Time Mal</p><p class="metric-value" id="metricBad">0</p></div></article>
-        <article class="metric-card gold"><div class="metric-icon">◉</div><div><p class="metric-label">Solo / Indep.</p><p class="metric-value" id="metricOther">0</p></div></article>
+        <article class="metric-card blue"><div class="metric-icon">💙</div><div><p class="metric-label">Vivos</p><p class="metric-value" id="metricAlive">0</p><p class="metric-score">Total em jogo</p></div></article>
+        <article class="metric-card red"><div class="metric-icon">☠</div><div><p class="metric-label">Mortos</p><p class="metric-value" id="metricDead">0</p><p class="metric-score">Eliminados</p></div></article>
+        <article class="metric-card blue"><div class="metric-icon">🛡</div><div><p class="metric-label">Time Bem</p><p class="metric-value" id="metricGood">0</p><p class="metric-score">Pontos: <strong id="scoreGood">0</strong></p></div></article>
+        <article class="metric-card red"><div class="metric-icon">🔥</div><div><p class="metric-label">Time Mal</p><p class="metric-value" id="metricBad">0</p><p class="metric-score">Pontos: <strong id="scoreBad">0</strong></p></div></article>
+        <article class="metric-card gold"><div class="metric-icon">◉</div><div><p class="metric-label">Solo / Indep.</p><p class="metric-value" id="metricOther">0</p><p class="metric-score">Pontos: <strong id="scoreOther">0</strong></p></div></article>
       </section>
 
       <section class="grid-2" id="jogadores">
@@ -855,7 +857,13 @@
       nightActions: [],
       publicReport: 'Nenhuma noite resolvida ainda.',
       masterReport: 'Nenhuma noite resolvida ainda.',
-      history: []
+      history: [],
+      scores: {
+        Bem: 0,
+        Mal: 0,
+        Solo: 0,
+        Independente: 0
+      }
     };
 
     let state = loadState();
@@ -864,7 +872,17 @@
 
     function loadState() {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(initialState);
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        const base = structuredClone(initialState);
+        if (!saved) return base;
+        return {
+          ...base,
+          ...saved,
+          scores: {
+            ...base.scores,
+            ...(saved.scores || {})
+          }
+        };
       } catch {
         return structuredClone(initialState);
       }
@@ -880,6 +898,55 @@
 
     function getPlayer(playerId) {
       return state.players.find((player) => player.id === playerId) || null;
+    }
+
+    const SCORE_RULES = {
+      assassino: { kill: { positive: 1, negative: -1 } },
+      dentista: { effect: { positive: 1, negative: -1 } },
+      barman: { effect: { positive: 1, negative: -1 } },
+      terrorista: { kill: { positive: 3, negative: -1 } },
+      medico: { save: { positive: 1, negative: -2 } },
+      detetive: { effect: { positive: 1, negative: 0 } },
+      justiceiro: { kill: { positive: 2, negative: -2 } },
+      sonambula: { save: { positive: 2, negative: -1 } },
+      legista: { effect: { positive: 1, negative: -1 } },
+      coveiro: { effect: { positive: 2, negative: -4 } },
+      psicopata: { kill: { positive: 1, negative: -1, fail: -1 } },
+      gambler: { mark: { positive: 1, negative: -1 } },
+      lider_culto: { effect: { positive: 1, negative: 0 } }
+    };
+
+    function ensureScores() {
+      state.scores = {
+        Bem: Number(state.scores?.Bem || 0),
+        Mal: Number(state.scores?.Mal || 0),
+        Solo: Number(state.scores?.Solo || 0),
+        Independente: Number(state.scores?.Independente || 0)
+      };
+    }
+
+    function registerTeamScore(scoreLines, team, points, reason) {
+      ensureScores();
+      if (!team || !Object.prototype.hasOwnProperty.call(state.scores, team) || !points) return;
+      state.scores[team] += points;
+      const signal = points > 0 ? `+${points}` : `${points}`;
+      scoreLines.push(`${team} ${signal} ponto(s): ${reason}`);
+    }
+
+    function scoreByRelation(scoreLines, action, scoreType, target, reason) {
+      const rule = SCORE_RULES[action.role.id]?.[scoreType];
+      if (!rule || !action.actor || !target) return 0;
+      const actorTeam = getCurrentTeam(action.actor);
+      const targetTeam = getCurrentTeam(target);
+      const isAlly = actorTeam === targetTeam;
+      const points = isAlly ? Number(rule.negative || 0) : Number(rule.positive || 0);
+      registerTeamScore(scoreLines, actorTeam, points, reason);
+      return points;
+    }
+
+    function scoreFixed(scoreLines, action, points, reason) {
+      if (!action.actor || !points) return;
+      registerTeamScore(scoreLines, getCurrentTeam(action.actor), Number(points), reason);
     }
 
     function normalizeName(name) {
@@ -1050,6 +1117,7 @@
         return;
       }
 
+      ensureScores();
       readNightActionsFromUI();
 
       const requiredMissing = state.nightActions.filter((action) => {
@@ -1064,6 +1132,7 @@
 
       const publicLines = [];
       const masterLines = [];
+      const scoreLines = [];
       const events = [];
       const protectedIds = new Set();
       const stunnedIds = new Set();
@@ -1071,6 +1140,8 @@
       const deathAttempts = [];
       const revivedIds = new Set();
       const convertedIds = new Set();
+      const saveActions = [];
+      const gamblerActions = [];
 
       const activeActions = state.nightActions
         .filter((action) => !action.skipped)
@@ -1080,6 +1151,7 @@
       for (const action of activeActions.filter((a) => a.role.mechanic === 'Atordoar')) {
         if (!action.target) continue;
         stunnedIds.add(action.target.id);
+        scoreByRelation(scoreLines, action, 'effect', action.target, `${action.actor.name} atordoou ${action.target.name}`);
         masterLines.push(`${action.actor.name} (${action.role.name}) atordoou ${action.target.name}. A ação de ${action.target.name} foi bloqueada.`);
         events.push({ icon: '🍺', text: `${action.target.name} foi atordoado.`, detail: `Noite ${state.round}` });
       }
@@ -1097,34 +1169,40 @@
         switch (action.role.mechanic) {
           case 'Salvar':
             protectedIds.add(action.target.id);
+            saveActions.push(action);
             masterLines.push(`${action.actor.name} (${action.role.name}) protegeu ${action.target.name}.`);
             events.push({ icon: '🛡', text: `${action.target.name} recebeu proteção.`, detail: `Noite ${state.round}` });
             break;
 
           case 'Silenciar':
             silencedIds.add(action.target.id);
+            scoreByRelation(scoreLines, action, 'effect', action.target, `${action.actor.name} silenciou ${action.target.name}`);
             masterLines.push(`${action.actor.name} (${action.role.name}) silenciou ${action.target.name}.`);
             events.push({ icon: '🔇', text: `${action.target.name} foi silenciado.`, detail: `Noite ${state.round}` });
             break;
 
           case 'Investigar':
+            scoreByRelation(scoreLines, action, 'effect', action.target, `${action.actor.name} investigou ${action.target.name}`);
             masterLines.push(`${action.actor.name} (${action.role.name}) investigou ${action.target.name}. Resultado: time ${getCurrentTeam(action.target)}.`);
             events.push({ icon: '🔍', text: `${action.target.name} foi investigado.`, detail: `Noite ${state.round}` });
             break;
 
           case 'Descobrir':
+            scoreByRelation(scoreLines, action, 'effect', action.target, `${action.actor.name} descobriu a função de ${action.target.name}`);
             masterLines.push(`${action.actor.name} (${action.role.name}) analisou ${action.target.name}. Função descoberta: ${getRole(action.target.roleId)?.name || 'não definida'}.`);
             events.push({ icon: '⚕', text: `${action.actor.name} analisou um morto.`, detail: `Noite ${state.round}` });
             break;
 
           case 'Converter':
             convertedIds.add(action.target.id);
+            scoreByRelation(scoreLines, action, 'effect', action.target, `${action.actor.name} converteu ${action.target.name}`);
             masterLines.push(`${action.actor.name} (${action.role.name}) converteu ${action.target.name} para o culto.`);
             events.push({ icon: '☼', text: `${action.target.name} foi convertido.`, detail: `Noite ${state.round}` });
             break;
 
           case 'Reviver':
             revivedIds.add(action.target.id);
+            scoreByRelation(scoreLines, action, 'effect', action.target, `${action.actor.name} reviveu ${action.target.name}`);
             masterLines.push(`${action.actor.name} (${action.role.name}) reviveu ${action.target.name}.`);
             events.push({ icon: '✚', text: `${action.target.name} foi revivido.`, detail: `Noite ${state.round}` });
             break;
@@ -1136,11 +1214,13 @@
             break;
 
           case 'Marcação':
+            gamblerActions.push(action);
             masterLines.push(`${action.actor.name} (${action.role.name}) marcou ${action.target.name}.`);
             events.push({ icon: '♦', text: `${action.target.name} foi marcado.`, detail: `Noite ${state.round}` });
             break;
 
           case 'Confundir':
+            scoreByRelation(scoreLines, action, 'effect', action.target, `${action.actor.name} confundiu ${action.target.name}`);
             masterLines.push(`${action.actor.name} (${action.role.name}) confundiu ${action.target.name}.`);
             events.push({ icon: '🎭', text: `${action.target.name} foi confundido.`, detail: `Noite ${state.round}` });
             break;
@@ -1155,13 +1235,42 @@
 
       for (const attempt of deathAttempts) {
         if (!attempt.target || !attempt.target.alive) continue;
+        const killRule = SCORE_RULES[attempt.role.id]?.kill;
+
         if (protectedIds.has(attempt.target.id)) {
           savedFromDeathIds.add(attempt.target.id);
           masterLines.push(`${attempt.target.name} seria morto por ${attempt.actor.name}, mas foi salvo.`);
+
+          if (attempt.role.id === 'psicopata' && killRule?.fail) {
+            scoreFixed(scoreLines, attempt, killRule.fail, `${attempt.actor.name} tentou matar ${attempt.target.name}, mas o alvo não morreu`);
+          }
         } else {
           killedIds.add(attempt.target.id);
           masterLines.push(`${attempt.target.name} morreu por ação de ${attempt.actor.name} (${attempt.role.name}).`);
+
+          if (attempt.role.id === 'psicopata') {
+            scoreFixed(scoreLines, attempt, killRule?.positive || 1, `${attempt.actor.name} matou ${attempt.target.name}`);
+          } else {
+            scoreByRelation(scoreLines, attempt, 'kill', attempt.target, `${attempt.actor.name} matou ${attempt.target.name}`);
+          }
         }
+      }
+
+      for (const action of saveActions) {
+        if (!action.target || !savedFromDeathIds.has(action.target.id)) continue;
+        scoreByRelation(scoreLines, action, 'save', action.target, `${action.actor.name} salvou ${action.target.name} de uma morte`);
+      }
+
+      for (const action of gamblerActions) {
+        if (!action.target) continue;
+        const rule = SCORE_RULES.gambler.mark;
+        const targetDied = killedIds.has(action.target.id);
+        scoreFixed(
+          scoreLines,
+          action,
+          targetDied ? rule.positive : rule.negative,
+          targetDied ? `${action.target.name} foi marcado e morreu` : `${action.target.name} foi marcado e não morreu`
+        );
       }
 
       state.players = state.players.map((player) => {
@@ -1193,9 +1302,25 @@
 
       state.nightActions = state.nightActions.map((action) => ({ ...action, resolved: true, result: 'Resolvido' }));
       state.phase = 'Dia';
-      state.publicReport = `Relatório público — Noite ${state.round}\n\n${publicLines.join('\n')}`;
-      state.masterReport = `Relatório secreto do mestre — Noite ${state.round}\n\n${masterLines.length ? masterLines.join('\n') : 'Nenhuma ação relevante foi registrada.'}`;
-      state.history.unshift({ type: 'night_resolved', round: state.round, text: `Noite ${state.round} resolvida.`, publicReport: state.publicReport, masterReport: state.masterReport, events, createdAt: new Date().toLocaleString('pt-BR') });
+      state.publicReport = `Relatório público — Noite ${state.round}
+
+${publicLines.join('
+')}`;
+      state.masterReport = `Relatório secreto do mestre — Noite ${state.round}
+
+${masterLines.length ? masterLines.join('
+') : 'Nenhuma ação relevante foi registrada.'}
+
+Pontuação da noite:
+${scoreLines.length ? scoreLines.join('
+') : 'Nenhuma pontuação aplicada nesta noite.'}
+
+Pontuação acumulada:
+Bem: ${state.scores.Bem}
+Mal: ${state.scores.Mal}
+Solo: ${state.scores.Solo}
+Independente: ${state.scores.Independente}`;
+      state.history.unshift({ type: 'night_resolved', round: state.round, text: `Noite ${state.round} resolvida.`, publicReport: state.publicReport, masterReport: state.masterReport, events, scores: { ...state.scores }, createdAt: new Date().toLocaleString('pt-BR') });
       saveState();
       render();
       location.hash = '#relatorio';
@@ -1399,6 +1524,7 @@
     }
 
     function renderMetrics() {
+      ensureScores();
       const alive = state.players.filter((player) => player.alive);
       const dead = state.players.filter((player) => !player.alive);
       const good = alive.filter((player) => getCurrentTeam(player) === 'Bem');
@@ -1410,6 +1536,9 @@
       $('metricGood').textContent = good.length;
       $('metricBad').textContent = bad.length;
       $('metricOther').textContent = other.length;
+      $('scoreGood').textContent = state.scores.Bem;
+      $('scoreBad').textContent = state.scores.Mal;
+      $('scoreOther').textContent = `${state.scores.Solo} / ${state.scores.Independente}`;
       $('playersCountChip').textContent = `${state.players.length} jogador${state.players.length === 1 ? '' : 'es'}`;
       $('gameStatusChip').textContent = state.status === 'em_andamento' ? '⌁ Partida em andamento' : '⌁ Partida não iniciada';
       $('roundChip').textContent = `✺ Rodada ${state.round}`;
