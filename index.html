@@ -7,40 +7,31 @@
   <style>
     :root {
       --bg: #05070b;
-      --bg-2: #090d13;
-      --panel: rgba(12, 15, 20, 0.92);
-      --panel-2: rgba(20, 8, 10, 0.78);
-      --line: rgba(255, 255, 255, 0.11);
-      --line-red: rgba(255, 38, 38, 0.45);
+      --panel: rgba(12, 15, 20, 0.94);
+      --panel-soft: rgba(255, 255, 255, 0.035);
+      --line: rgba(255, 255, 255, 0.12);
+      --line-red: rgba(255, 38, 38, 0.42);
       --line-blue: rgba(96, 205, 255, 0.48);
-      --red: #ff2626;
-      --red-2: #9d1111;
+      --red: #ff2b2b;
+      --red-dark: #7d0b0b;
       --blue: #6fd7ff;
-      --blue-2: #119ce4;
+      --blue-dark: #0b5f99;
       --gold: #ffc943;
       --purple: #c47cff;
+      --green: #36e09f;
       --text: #f5f7fb;
       --muted: #9ba7b8;
       --good: #42cfff;
       --bad: #ff3939;
       --solo: #ffc22e;
       --indep: #c47cff;
-      --success: #36e09f;
       --radius: 18px;
-      --shadow-red: 0 0 24px rgba(255, 30, 30, 0.25);
-      --shadow-blue: 0 0 26px rgba(81, 196, 255, 0.28);
-      --sidebar-w: 248px;
-      --topbar-h: 86px;
+      --shadow-red: 0 0 24px rgba(255, 30, 30, 0.24);
+      --shadow-blue: 0 0 26px rgba(81, 196, 255, 0.25);
+      --sidebar-w: 250px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      min-height: 100%;
-      background: var(--bg);
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -48,9 +39,9 @@
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 20% 8%, rgba(43, 163, 255, 0.16), transparent 30%),
-        radial-gradient(circle at 82% 18%, rgba(255, 20, 20, 0.16), transparent 27%),
-        linear-gradient(135deg, rgba(4, 6, 11, 0.96), rgba(8, 10, 16, 0.98)),
+        radial-gradient(circle at 20% 7%, rgba(43, 163, 255, 0.16), transparent 31%),
+        radial-gradient(circle at 84% 18%, rgba(255, 20, 20, 0.16), transparent 29%),
+        linear-gradient(135deg, rgba(4, 6, 11, 0.98), rgba(8, 10, 16, 0.98)),
         #05070b;
       overflow-x: hidden;
     }
@@ -66,32 +57,11 @@
         linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px);
       background-size: 48px 48px;
       mask-image: radial-gradient(circle at center, black, transparent 78%);
-      opacity: 0.38;
+      opacity: 0.34;
     }
 
-    body::after {
-      content: "";
-      position: fixed;
-      left: -15%;
-      right: -15%;
-      bottom: -18%;
-      height: 50%;
-      pointer-events: none;
-      z-index: -1;
-      background:
-        radial-gradient(ellipse at center, rgba(124, 215, 255, 0.13), transparent 48%),
-        linear-gradient(to top, rgba(255, 23, 23, 0.14), transparent 78%);
-      filter: blur(10px);
-      opacity: 0.8;
-    }
-
-    button, input, select, textarea {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
 
     .app-shell {
       min-height: 100vh;
@@ -105,14 +75,14 @@
       height: 100vh;
       padding: 18px 14px;
       background:
-        linear-gradient(180deg, rgba(8, 10, 14, 0.98), rgba(5, 7, 10, 0.94)),
+        linear-gradient(180deg, rgba(8, 10, 14, 0.98), rgba(5, 7, 10, 0.95)),
         radial-gradient(circle at 50% 100%, rgba(255, 0, 0, 0.22), transparent 48%);
       border-right: 1px solid var(--line);
-      box-shadow: inset -1px 0 rgba(255,255,255,0.03), 12px 0 40px rgba(0,0,0,0.28);
+      box-shadow: 12px 0 40px rgba(0,0,0,0.28);
       z-index: 20;
     }
 
-    .sidebar-top {
+    .brand-row {
       display: flex;
       align-items: center;
       gap: 12px;
@@ -125,13 +95,11 @@
       border-radius: 50%;
       display: grid;
       place-items: center;
-      background:
-        linear-gradient(90deg, rgba(255, 28, 28, 0.95) 0 48%, rgba(52, 190, 255, 0.95) 52%),
-        #12161f;
+      background: linear-gradient(90deg, rgba(255, 28, 28, 0.95) 0 48%, rgba(52, 190, 255, 0.95) 52%);
       color: white;
       box-shadow: var(--shadow-red), var(--shadow-blue);
       border: 1px solid rgba(255,255,255,0.26);
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing: -0.08em;
     }
 
@@ -153,7 +121,6 @@
     .nav-list {
       display: grid;
       gap: 8px;
-      margin-top: 4px;
     }
 
     .nav-item {
@@ -168,10 +135,10 @@
       background: transparent;
       text-align: left;
       transition: 180ms ease;
+      text-decoration: none;
     }
 
-    .nav-item:hover,
-    .nav-item.active {
+    .nav-item:hover, .nav-item.active {
       color: #fff;
       background: linear-gradient(90deg, rgba(162, 14, 14, 0.86), rgba(75, 8, 8, 0.32));
       border-color: rgba(255, 45, 45, 0.38);
@@ -183,7 +150,6 @@
       display: inline-grid;
       place-items: center;
       font-size: 1.18rem;
-      opacity: 0.96;
     }
 
     .sidebar-footer {
@@ -206,16 +172,8 @@
       filter: drop-shadow(0 0 8px rgba(111,215,255,0.55));
     }
 
-    .sidebar-footer strong {
-      display: block;
-      font-size: 0.95rem;
-    }
-
-    .sidebar-footer span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.76rem;
-    }
+    .sidebar-footer strong { display: block; }
+    .sidebar-footer span { display: block; color: var(--muted); font-size: 0.76rem; }
 
     .main {
       min-width: 0;
@@ -223,7 +181,6 @@
     }
 
     .topbar {
-      min-height: var(--topbar-h);
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 18px;
@@ -235,8 +192,8 @@
         linear-gradient(90deg, rgba(255,255,255,0.048), rgba(255,255,255,0.018)),
         radial-gradient(circle at 70% 0%, rgba(91, 198, 255, 0.14), transparent 42%);
       box-shadow: 0 18px 50px rgba(0,0,0,0.28);
-      position: relative;
       overflow: hidden;
+      position: relative;
     }
 
     .topbar::after {
@@ -245,6 +202,13 @@
       inset: auto 0 0 0;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(111,215,255,0.8), rgba(255,38,38,0.65), transparent);
+    }
+
+    .title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
     }
 
     .mobile-menu-btn {
@@ -259,17 +223,13 @@
       box-shadow: var(--shadow-blue);
     }
 
-    .title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
+    h1, h2, h3 {
+      font-family: Georgia, "Times New Roman", serif;
     }
 
     .title-wrap h1 {
       margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-weight: 700;
+      font-weight: 750;
       font-size: clamp(1.35rem, 2.5vw, 2.35rem);
       letter-spacing: 0.025em;
       line-height: 1.05;
@@ -290,28 +250,20 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 13px;
+      padding: 9px 12px;
       border-radius: 999px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.04);
-      font-size: 0.83rem;
-      font-weight: 750;
+      font-size: 0.82rem;
+      font-weight: 800;
       white-space: nowrap;
     }
 
-    .chip.red {
-      color: #ffd7d7;
-      border-color: rgba(255, 46, 46, 0.48);
-      background: rgba(133, 15, 15, 0.36);
-      box-shadow: 0 0 18px rgba(255, 30, 30, 0.18);
-    }
-
-    .chip.blue {
-      color: #dff7ff;
-      border-color: rgba(87, 206, 255, 0.48);
-      background: rgba(16, 95, 144, 0.28);
-      box-shadow: 0 0 18px rgba(81, 196, 255, 0.18);
-    }
+    .chip.red { color: #ffd7d7; border-color: rgba(255, 46, 46, 0.48); background: rgba(133, 15, 15, 0.36); box-shadow: var(--shadow-red); }
+    .chip.blue { color: #dff7ff; border-color: rgba(87, 206, 255, 0.48); background: rgba(16, 95, 144, 0.28); box-shadow: var(--shadow-blue); }
+    .chip.green { color: #c6ffe7; border-color: rgba(54,224,159,0.42); background: rgba(54,224,159,0.12); }
+    .chip.gold { color: #ffe7a7; border-color: rgba(255,201,67,0.42); background: rgba(255,201,67,0.12); }
+    .chip.purple { color: #edd8ff; border-color: rgba(196,124,255,0.42); background: rgba(196,124,255,0.12); }
 
     .metrics-grid {
       display: grid;
@@ -324,13 +276,11 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      min-height: 104px;
+      min-height: 102px;
       padding: 16px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
-        rgba(7, 10, 15, 0.86);
+      background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)), rgba(7, 10, 15, 0.86);
       position: relative;
       overflow: hidden;
       box-shadow: 0 18px 42px rgba(0,0,0,0.22);
@@ -345,7 +295,7 @@
       bottom: -48px;
       border-radius: 999px;
       filter: blur(2px);
-      opacity: 0.24;
+      opacity: 0.22;
     }
 
     .metric-card.blue::before { background: var(--blue); }
@@ -371,25 +321,19 @@
     .metric-card.gold .metric-icon { color: var(--gold); box-shadow: 0 0 24px rgba(255,201,67,0.2); }
     .metric-card.purple .metric-icon { color: var(--purple); box-shadow: 0 0 24px rgba(196,124,255,0.22); }
 
-    .metric-label {
-      margin: 0 0 3px;
-      color: var(--muted);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-    }
+    .metric-label { margin: 0 0 3px; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 850; letter-spacing: 0.08em; }
+    .metric-value { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 2.05rem; line-height: 1; }
 
-    .metric-value {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 2.12rem;
-      line-height: 1;
-    }
-
-    .content-grid {
+    .grid-2 {
       display: grid;
-      grid-template-columns: minmax(0, 1.68fr) minmax(330px, 0.9fr);
+      grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
       margin-top: 16px;
     }
@@ -397,9 +341,7 @@
     .panel {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.048), rgba(255,255,255,0.018)),
-        var(--panel);
+      background: linear-gradient(180deg, rgba(255,255,255,0.048), rgba(255,255,255,0.018)), var(--panel);
       box-shadow: 0 18px 46px rgba(0,0,0,0.27);
       overflow: hidden;
       min-width: 0;
@@ -407,9 +349,12 @@
 
     .panel.danger {
       border-color: rgba(255, 47, 47, 0.28);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255, 20, 20, 0.11), transparent 42%),
-        var(--panel);
+      background: radial-gradient(circle at 50% 0%, rgba(255, 20, 20, 0.11), transparent 42%), var(--panel);
+    }
+
+    .panel.blue {
+      border-color: rgba(111, 215, 255, 0.22);
+      background: radial-gradient(circle at 50% 0%, rgba(111, 215, 255, 0.09), transparent 42%), var(--panel);
     }
 
     .panel-header {
@@ -422,124 +367,26 @@
       background: rgba(0,0,0,0.18);
     }
 
-    .panel-title {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 1.18rem;
-      letter-spacing: 0.03em;
+    .panel-title { margin: 0; font-size: 1.18rem; letter-spacing: 0.03em; }
+    .panel-subtitle { margin: 3px 0 0; color: var(--muted); font-size: 0.82rem; }
+    .panel-body { padding: 16px 18px 18px; }
+
+    .help-box {
+      border: 1px solid rgba(111,215,255,0.18);
+      border-radius: 16px;
+      background: rgba(111,215,255,0.07);
+      padding: 14px;
+      color: #cfefff;
+      line-height: 1.55;
     }
 
-    .panel-subtitle {
-      margin: 3px 0 0;
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
+    .help-box strong { color: white; }
 
-    .panel-body {
-      padding: 16px 18px 18px;
-    }
+    .form-grid { display: grid; gap: 14px; }
+    .inline-form { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+    .field label { display: block; margin: 0 0 7px; color: #dce8f3; font-size: 0.78rem; font-weight: 850; text-transform: uppercase; letter-spacing: 0.08em; }
 
-    .table-wrap {
-      width: 100%;
-      overflow-x: auto;
-      border-radius: 13px;
-      border: 1px solid rgba(255,255,255,0.065);
-      background: rgba(0,0,0,0.16);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 720px;
-    }
-
-    th, td {
-      padding: 12px 13px;
-      border-bottom: 1px solid rgba(255,255,255,0.075);
-      text-align: left;
-      vertical-align: middle;
-      font-size: 0.9rem;
-    }
-
-    th {
-      color: #dce8f3;
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      background: rgba(255,255,255,0.035);
-      white-space: nowrap;
-    }
-
-    tr:last-child td {
-      border-bottom: 0;
-    }
-
-    .role-line {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .role-ico {
-      width: 27px;
-      height: 27px;
-      border-radius: 9px;
-      display: inline-grid;
-      place-items: center;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.11);
-    }
-
-    .team-good, .text-good { color: var(--good); }
-    .team-bad, .text-bad { color: var(--bad); }
-    .team-solo, .text-solo { color: var(--solo); }
-    .team-indep, .text-indep { color: var(--indep); }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-size: 0.74rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      white-space: nowrap;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .status-badge.pending {
-      color: #ffb7b7;
-      background: rgba(255, 22, 22, 0.16);
-      border-color: rgba(255, 35, 35, 0.32);
-    }
-
-    .status-badge.done {
-      color: #bbffdf;
-      background: rgba(54, 224, 159, 0.12);
-      border-color: rgba(54, 224, 159, 0.32);
-    }
-
-    .form-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .field label {
-      display: block;
-      margin: 0 0 7px;
-      color: #dce8f3;
-      font-size: 0.78rem;
-      font-weight: 850;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .field select,
-    .field input,
-    .field textarea {
+    input, select, textarea {
       width: 100%;
       min-height: 45px;
       border: 1px solid rgba(255,255,255,0.13);
@@ -551,25 +398,10 @@
       transition: 170ms ease;
     }
 
-    .field textarea {
-      min-height: 86px;
-      padding-top: 12px;
-      resize: vertical;
-    }
+    textarea { min-height: 112px; padding-top: 12px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { border-color: rgba(111,215,255,0.78); box-shadow: 0 0 0 3px rgba(111,215,255,0.12); }
 
-    .field select:focus,
-    .field input:focus,
-    .field textarea:focus {
-      border-color: rgba(111,215,255,0.78);
-      box-shadow: 0 0 0 3px rgba(111,215,255,0.12);
-    }
-
-    .button-stack {
-      display: grid;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
     .btn {
       border: 1px solid transparent;
       border-radius: 14px;
@@ -584,314 +416,132 @@
       justify-content: center;
       gap: 9px;
     }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-blue { background: linear-gradient(180deg, rgba(39, 154, 225, 0.92), rgba(8, 72, 122, 0.94)); border-color: rgba(111,215,255,0.52); box-shadow: var(--shadow-blue); }
+    .btn-red { background: linear-gradient(180deg, rgba(220, 22, 22, 0.95), rgba(96, 8, 8, 0.96)); border-color: rgba(255,80,80,0.48); box-shadow: var(--shadow-red); }
+    .btn-ghost { background: rgba(255,255,255,0.045); border-color: rgba(255,255,255,0.14); color: var(--text); }
+    .btn-green { background: linear-gradient(180deg, rgba(54, 224, 159, 0.85), rgba(12, 104, 76, 0.92)); border-color: rgba(54,224,159,0.45); }
 
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-blue {
-      background: linear-gradient(180deg, rgba(39, 154, 225, 0.92), rgba(8, 72, 122, 0.94));
-      border-color: rgba(111,215,255,0.52);
-      box-shadow: var(--shadow-blue);
-    }
-
-    .btn-red {
-      background: linear-gradient(180deg, rgba(220, 22, 22, 0.95), rgba(96, 8, 8, 0.96));
-      border-color: rgba(255,80,80,0.48);
-      box-shadow: var(--shadow-red);
-    }
-
-    .tabs-panel {
-      margin-top: 16px;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-      padding: 12px 12px 0;
+    .table-wrap {
+      width: 100%;
       overflow-x: auto;
+      border-radius: 13px;
+      border: 1px solid rgba(255,255,255,0.065);
+      background: rgba(0,0,0,0.16);
     }
 
-    .tab-btn {
-      border: 1px solid rgba(255,255,255,0.12);
-      border-bottom-color: rgba(255,255,255,0.08);
-      border-radius: 14px 14px 0 0;
-      padding: 12px 16px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.03);
-      white-space: nowrap;
-      font-weight: 850;
-      transition: 170ms ease;
-    }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    th, td { padding: 12px 13px; border-bottom: 1px solid rgba(255,255,255,0.075); text-align: left; vertical-align: middle; font-size: 0.9rem; }
+    th { color: #dce8f3; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(255,255,255,0.035); white-space: nowrap; }
+    tr:last-child td { border-bottom: 0; }
 
-    .tab-btn.active {
-      color: #e9fbff;
-      border-color: rgba(111,215,255,0.42);
-      background: linear-gradient(180deg, rgba(31, 130, 190, 0.24), rgba(255,255,255,0.04));
-      box-shadow: inset 0 2px 0 rgba(111,215,255,0.65);
-    }
+    .role-line { display: inline-flex; align-items: center; gap: 9px; font-weight: 850; white-space: nowrap; }
+    .role-ico { width: 27px; height: 27px; border-radius: 9px; display: inline-grid; place-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.11); }
+    .team-good, .text-good { color: var(--good); }
+    .team-bad, .text-bad { color: var(--bad); }
+    .team-solo, .text-solo { color: var(--solo); }
+    .team-indep, .text-indep { color: var(--indep); }
+    .text-muted { color: var(--muted); }
 
-    .tab-content {
-      display: none;
-      padding: 16px;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .lower-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-      gap: 16px;
-    }
-
-    .events-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(130px, 1fr));
-      gap: 12px;
-    }
-
-    .event-chip {
-      display: flex;
+    .status-badge {
+      display: inline-flex;
       align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .status-badge.pending { color: #ffb7b7; background: rgba(255, 22, 22, 0.16); border-color: rgba(255, 35, 35, 0.32); }
+    .status-badge.done { color: #bbffdf; background: rgba(54, 224, 159, 0.12); border-color: rgba(54, 224, 159, 0.32); }
+    .status-badge.dead { color: #ffc7c7; background: rgba(255, 35, 35, 0.12); border-color: rgba(255, 35, 35, 0.32); }
+    .status-badge.info { color: #c8f1ff; background: rgba(111, 215, 255, 0.12); border-color: rgba(111, 215, 255, 0.32); }
+
+    .tabs-panel { margin-top: 16px; }
+    .tabs { display: flex; gap: 8px; padding: 12px 12px 0; overflow-x: auto; }
+    .tab-btn { border: 1px solid rgba(255,255,255,0.12); border-bottom-color: rgba(255,255,255,0.08); border-radius: 14px 14px 0 0; padding: 12px 16px; color: var(--muted); background: rgba(255,255,255,0.03); white-space: nowrap; font-weight: 850; transition: 170ms ease; }
+    .tab-btn.active { color: #e9fbff; border-color: rgba(111,215,255,0.42); background: linear-gradient(180deg, rgba(31, 130, 190, 0.24), rgba(255,255,255,0.04)); box-shadow: inset 0 2px 0 rgba(111,215,255,0.65); }
+    .tab-content { display: none; padding: 16px; }
+    .tab-content.active { display: block; }
+
+    .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .report-box {
+      min-height: 220px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(0,0,0,0.22);
+      padding: 15px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .report-box h3 { margin: 0 0 10px; font-size: 1.02rem; }
+    .report-box.public { border-color: rgba(111,215,255,0.24); }
+    .report-box.master { border-color: rgba(255,43,43,0.24); }
+
+    .event-log {
+      display: grid;
       gap: 10px;
-      min-height: 68px;
-      padding: 12px 14px;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.035);
-      font-weight: 900;
-      color: #fff;
     }
-
-    .event-chip.red { border-color: rgba(255, 44, 44, 0.35); color: #ffb7b7; }
-    .event-chip.blue { border-color: rgba(111,215,255,0.35); color: #bff0ff; }
-    .event-chip.purple { border-color: rgba(196,124,255,0.35); color: #e7ceff; }
-    .event-chip.gold { border-color: rgba(255,201,67,0.35); color: #ffe6a0; }
-
-    .latest-panel {
-      margin-top: 16px;
-    }
-
-    .latest-list {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
-      gap: 12px;
-      align-items: stretch;
-    }
-
-    .latest-item {
+    .event-item {
       display: flex;
-      gap: 12px;
-      align-items: center;
-      min-height: 78px;
-      padding: 13px;
+      gap: 11px;
+      align-items: flex-start;
+      padding: 12px;
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.035);
-      min-width: 0;
-    }
-
-    .latest-icon {
-      width: 44px;
-      height: 44px;
       border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: rgba(111,215,255,0.12);
-      border: 1px solid rgba(111,215,255,0.2);
-      color: var(--blue);
-      flex: 0 0 auto;
+      background: rgba(255,255,255,0.035);
     }
+    .event-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 12px; background: rgba(111,215,255,0.1); flex: 0 0 auto; }
+    .event-item strong { display: block; }
+    .event-item span { display: block; color: var(--muted); font-size: 0.82rem; margin-top: 2px; }
 
-    .latest-item strong {
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .latest-item span {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 0.79rem;
-    }
-
-    .history-btn {
-      min-width: 164px;
-      align-self: stretch;
+    .empty-state {
+      border: 1px dashed rgba(255,255,255,0.16);
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.045);
-      color: var(--text);
-      font-weight: 900;
+      padding: 20px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(255,255,255,0.025);
     }
 
-    .mobile-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      z-index: 15;
-      backdrop-filter: blur(3px);
-    }
-
-    .mobile-overlay.active {
-      display: block;
-    }
-
-    .only-mobile {
-      display: none;
-    }
+    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 15; backdrop-filter: blur(3px); }
+    .mobile-overlay.active { display: block; }
 
     @media (max-width: 1280px) {
-      .metrics-grid {
-        grid-template-columns: repeat(3, minmax(180px, 1fr));
-      }
-
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .lower-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .events-grid {
-        grid-template-columns: repeat(3, minmax(130px, 1fr));
-      }
-
-      .latest-list {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .history-btn {
-        grid-column: 1 / -1;
-        min-height: 52px;
-      }
+      .metrics-grid { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .report-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 980px) {
-      .app-shell {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: min(82vw, 310px);
-        transform: translateX(-110%);
-        transition: 220ms ease;
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .mobile-menu-btn {
-        display: inline-grid;
-        place-items: center;
-      }
-
-      .only-mobile {
-        display: inline-flex;
-      }
-
-      .topbar {
-        grid-template-columns: 1fr;
-      }
-
-      .title-wrap {
-        display: grid;
-        grid-template-columns: auto auto minmax(0, 1fr);
-      }
-
-      .status-row {
-        justify-content: flex-start;
-      }
-
-      .metrics-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .latest-list {
-        grid-template-columns: 1fr;
-      }
+      .app-shell { grid-template-columns: 1fr; }
+      .sidebar { position: fixed; left: 0; top: 0; width: min(84vw, 320px); transform: translateX(-110%); transition: 220ms ease; }
+      .sidebar.open { transform: translateX(0); }
+      .mobile-menu-btn { display: inline-grid; place-items: center; }
+      .topbar { grid-template-columns: 1fr; }
+      .title-wrap { display: grid; grid-template-columns: auto auto minmax(0, 1fr); }
+      .status-row { justify-content: flex-start; }
+      .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 680px) {
-      .main {
-        padding: 12px 10px 22px;
-      }
-
-      .topbar {
-        border-radius: 18px;
-        padding: 12px;
-      }
-
-      .brand-mark {
-        width: 42px;
-        height: 42px;
-      }
-
-      .title-wrap {
-        gap: 10px;
-      }
-
-      .title-wrap h1 {
-        font-size: 1.18rem;
-        white-space: normal;
-      }
-
-      .status-row {
-        gap: 8px;
-      }
-
-      .chip {
-        font-size: 0.75rem;
-        padding: 8px 10px;
-      }
-
-      .metrics-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-
-      .metric-card {
-        min-height: 82px;
-      }
-
-      .panel-header,
-      .panel-body,
-      .tab-content {
-        padding-left: 12px;
-        padding-right: 12px;
-      }
-
-      .panel-title {
-        font-size: 1.02rem;
-      }
-
-      table {
-        min-width: 680px;
-      }
-
-      th, td {
-        padding: 10px;
-        font-size: 0.82rem;
-      }
-
-      .events-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .tab-btn {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-      }
+      .main { padding: 12px 10px 22px; }
+      .topbar { border-radius: 18px; padding: 12px; }
+      .brand-mark { width: 42px; height: 42px; }
+      .title-wrap { gap: 10px; }
+      .title-wrap h1 { font-size: 1.18rem; white-space: normal; }
+      .chip { font-size: 0.75rem; padding: 8px 10px; }
+      .metrics-grid { grid-template-columns: 1fr; gap: 10px; }
+      .metric-card { min-height: 82px; }
+      .panel-header, .panel-body, .tab-content { padding-left: 12px; padding-right: 12px; }
+      table { min-width: 720px; }
+      th, td { padding: 10px; font-size: 0.82rem; }
+      .inline-form { grid-template-columns: 1fr; }
+      .btn { width: 100%; }
     }
   </style>
 </head>
@@ -900,7 +550,7 @@
 
   <div class="app-shell">
     <aside class="sidebar" id="sidebar" aria-label="Menu principal">
-      <div class="sidebar-top">
+      <div class="brand-row">
         <div class="brand-mark">CD</div>
         <div class="brand-copy">
           <strong>Cidade Dorme</strong>
@@ -909,14 +559,13 @@
       </div>
 
       <nav class="nav-list">
-        <button class="nav-item active"><span class="nav-icon">✥</span>Dashboard</button>
-        <button class="nav-item"><span class="nav-icon">🎭</span>Funções</button>
-        <button class="nav-item"><span class="nav-icon">🕯️</span>Personagens</button>
-        <button class="nav-item"><span class="nav-icon">👥</span>Jogadores</button>
-        <button class="nav-item"><span class="nav-icon">♜</span>Partidas</button>
-        <button class="nav-item"><span class="nav-icon">⌛</span>Rodadas</button>
-        <button class="nav-item"><span class="nav-icon">📜</span>Histórico</button>
-        <button class="nav-item"><span class="nav-icon">⚙</span>Configurações</button>
+        <a class="nav-item active" href="#dashboard"><span class="nav-icon">✥</span>Dashboard</a>
+        <a class="nav-item" href="#jogadores"><span class="nav-icon">👥</span>Jogadores</a>
+        <a class="nav-item" href="#cartas"><span class="nav-icon">🎴</span>Vincular cartas</a>
+        <a class="nav-item" href="#noite"><span class="nav-icon">☾</span>Rodada/noite</a>
+        <a class="nav-item" href="#relatorio"><span class="nav-icon">📜</span>Relatório</a>
+        <a class="nav-item" href="#dia"><span class="nav-icon">🗳</span>Dia/votação</a>
+        <a class="nav-item" href="#historico"><span class="nav-icon">⏳</span>Histórico</a>
       </nav>
 
       <div class="sidebar-footer">
@@ -929,7 +578,7 @@
     </aside>
 
     <main class="main">
-      <header class="topbar">
+      <header class="topbar" id="dashboard">
         <div class="title-wrap">
           <button class="mobile-menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
           <div class="brand-mark">CD</div>
@@ -937,309 +586,237 @@
         </div>
 
         <div class="status-row">
-          <span class="chip red">⌁ Partida em andamento</span>
-          <span class="chip blue">✺ Rodada 3</span>
-          <span class="chip blue">☾ Fase: Noite</span>
+          <span class="chip red" id="gameStatusChip">⌁ Partida não iniciada</span>
+          <span class="chip blue" id="roundChip">✺ Rodada 0</span>
+          <span class="chip blue" id="phaseChip">☾ Fase: Preparação</span>
         </div>
       </header>
 
       <section class="metrics-grid" aria-label="Resumo da partida">
-        <article class="metric-card blue">
-          <div class="metric-icon">💙</div>
-          <div>
-            <p class="metric-label">Vivos</p>
-            <p class="metric-value">12</p>
+        <article class="metric-card blue"><div class="metric-icon">💙</div><div><p class="metric-label">Vivos</p><p class="metric-value" id="metricAlive">0</p></div></article>
+        <article class="metric-card red"><div class="metric-icon">☠</div><div><p class="metric-label">Mortos</p><p class="metric-value" id="metricDead">0</p></div></article>
+        <article class="metric-card blue"><div class="metric-icon">🛡</div><div><p class="metric-label">Time Bem</p><p class="metric-value" id="metricGood">0</p></div></article>
+        <article class="metric-card red"><div class="metric-icon">🔥</div><div><p class="metric-label">Time Mal</p><p class="metric-value" id="metricBad">0</p></div></article>
+        <article class="metric-card gold"><div class="metric-icon">◉</div><div><p class="metric-label">Solo / Indep.</p><p class="metric-value" id="metricOther">0</p></div></article>
+      </section>
+
+      <section class="grid-2" id="jogadores">
+        <article class="panel blue">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">1. Cadastrar jogadores</h2>
+              <p class="panel-subtitle">Digite um nome por linha e inicie a partida.</p>
+            </div>
+            <span class="chip blue" id="playersCountChip">0 jogadores</span>
+          </div>
+          <div class="panel-body">
+            <div class="form-grid">
+              <div class="field">
+                <label for="gameName">Nome da partida</label>
+                <input id="gameName" placeholder="Ex: Cidade Dorme — Rodada de sábado" />
+              </div>
+              <div class="field">
+                <label for="playersTextarea">Jogadores</label>
+                <textarea id="playersTextarea" placeholder="Rodrigo&#10;João&#10;Danilo&#10;Leonardo"></textarea>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-blue" id="createGameBtn">☾ Criar partida</button>
+                <button class="btn btn-ghost" id="resetGameBtn">♻ Limpar partida</button>
+              </div>
+            </div>
           </div>
         </article>
-        <article class="metric-card red">
-          <div class="metric-icon">☠</div>
-          <div>
-            <p class="metric-label">Mortos</p>
-            <p class="metric-value">3</p>
+
+        <article class="panel danger">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Fluxo da mecânica</h2>
+              <p class="panel-subtitle">Como o sistema vai controlar o jogo.</p>
+            </div>
           </div>
-        </article>
-        <article class="metric-card blue">
-          <div class="metric-icon">🛡</div>
-          <div>
-            <p class="metric-label">Time Bem</p>
-            <p class="metric-value">7</p>
-          </div>
-        </article>
-        <article class="metric-card red">
-          <div class="metric-icon">🔥</div>
-          <div>
-            <p class="metric-label">Time Mal</p>
-            <p class="metric-value">4</p>
-          </div>
-        </article>
-        <article class="metric-card gold">
-          <div class="metric-icon">◉</div>
-          <div>
-            <p class="metric-label">Solo / Indep.</p>
-            <p class="metric-value">1</p>
+          <div class="panel-body">
+            <div class="help-box">
+              <strong>1.</strong> Cadastre os jogadores reais.<br />
+              <strong>2.</strong> Distribua as cartas fisicamente para cada pessoa.<br />
+              <strong>3.</strong> Na primeira noite, o mestre vincula no sistema qual carta/função cada jogador recebeu.<br />
+              <strong>4.</strong> O mestre registra as ações da noite: matar, salvar, silenciar, investigar, converter etc.<br />
+              <strong>5.</strong> O sistema resolve conflitos e gera dois textos: relatório público para a cidade e relatório secreto para o mestre.
+            </div>
           </div>
         </article>
       </section>
 
-      <section class="content-grid">
+      <section class="panel tabs-panel" id="cartas">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">2. Vincular cartas/funções aos jogadores</h2>
+            <p class="panel-subtitle">Use depois que as cartas forem distribuídas e cada jogador souber sua função.</p>
+          </div>
+          <button class="btn btn-green" id="saveRolesBtn">✓ Salvar vínculos</button>
+        </div>
+        <div class="panel-body">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Jogador</th>
+                  <th>Função/carta</th>
+                  <th>Time</th>
+                  <th>Mecânica</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="assignmentsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid-2" id="noite">
         <article class="panel">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Controle da Rodada</h2>
-              <p class="panel-subtitle">Ações pendentes da fase atual</p>
+              <h2 class="panel-title">3. Controle da noite</h2>
+              <p class="panel-subtitle">Registre o que cada função fez quando acordou.</p>
             </div>
-            <span class="chip red">6 pendentes</span>
+            <div class="status-row">
+              <button class="btn btn-blue" id="startNightBtn">☾ Iniciar noite</button>
+              <button class="btn btn-red" id="resolveNightBtn">☠ Resolver noite</button>
+            </div>
           </div>
-
           <div class="panel-body">
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
+                    <th>Ator</th>
                     <th>Função</th>
-                    <th>Jogador</th>
                     <th>Ação</th>
                     <th>Alvo</th>
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td><span class="role-line text-bad"><span class="role-ico">🗡</span>Assassino</span></td>
-                    <td>Charles Magnus</td>
-                    <td>Alvo de time inimigo assassinado</td>
-                    <td>Haval Brinston</td>
-                    <td><span class="status-badge pending">● Pendente</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="role-line text-good"><span class="role-ico">✚</span>Médico/Enfermeira</span></td>
-                    <td>Xue Liang</td>
-                    <td>Salvar alvo</td>
-                    <td>—</td>
-                    <td><span class="status-badge pending">● Pendente</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="role-line text-good"><span class="role-ico">🔍</span>Detetive</span></td>
-                    <td>Haval Brinston</td>
-                    <td>Investigar jogador</td>
-                    <td>—</td>
-                    <td><span class="status-badge pending">● Pendente</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="role-line text-bad"><span class="role-ico">🦷</span>Dentista</span></td>
-                    <td>Kevin V. Fischer</td>
-                    <td>Silenciar alvo</td>
-                    <td>—</td>
-                    <td><span class="status-badge pending">● Pendente</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="role-line text-solo"><span class="role-ico">◎</span>Psicopata</span></td>
-                    <td>John Sponner</td>
-                    <td>Marcar alvo morto</td>
-                    <td>—</td>
-                    <td><span class="status-badge pending">● Pendente</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="role-line text-indep"><span class="role-ico">☼</span>Líder do Culto</span></td>
-                    <td>Cain Grave</td>
-                    <td>Converter único</td>
-                    <td>—</td>
-                    <td><span class="status-badge pending">● Pendente</span></td>
-                  </tr>
-                </tbody>
+                <tbody id="nightActionsBody"></tbody>
               </table>
             </div>
           </div>
         </article>
 
-        <aside class="panel danger">
+        <article class="panel danger">
           <div class="panel-header">
             <div>
-              <h2 class="panel-title">Resolver Noite</h2>
-              <p class="panel-subtitle">Registrar ação e alvo</p>
+              <h2 class="panel-title">Regras aplicadas nesta versão</h2>
+              <p class="panel-subtitle">MVP funcional para validar a dinâmica.</p>
             </div>
           </div>
-
           <div class="panel-body">
-            <form class="form-grid" id="actionForm">
-              <div class="field">
-                <label for="actor">Ator</label>
-                <select id="actor">
-                  <option>Selecione o jogador</option>
-                  <option>Charles Magnus</option>
-                  <option>Xue Liang</option>
-                  <option>Haval Brinston</option>
-                  <option>Cain Grave</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="role">Função</label>
-                <select id="role">
-                  <option>Selecione a função</option>
-                  <option>Assassino</option>
-                  <option>Médico/Enfermeira</option>
-                  <option>Detetive</option>
-                  <option>Dentista</option>
-                  <option>Líder do Culto</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="target">Alvo</label>
-                <select id="target">
-                  <option>Selecione o alvo opcional</option>
-                  <option>Anthony Whitman</option>
-                  <option>Haval Brinston</option>
-                  <option>Rodrigo</option>
-                  <option>João</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="result">Resultado</label>
-                <select id="result">
-                  <option>Selecione o resultado</option>
-                  <option>Positivo</option>
-                  <option>Negativo</option>
-                  <option>Neutro</option>
-                </select>
-              </div>
-
-              <div class="button-stack">
-                <button type="submit" class="btn btn-blue">✎ Registrar Ação</button>
-                <button type="button" class="btn btn-red">☠ Resolver Rodada</button>
-              </div>
-            </form>
+            <div class="event-log">
+              <div class="event-item"><span class="event-icon">🍺</span><div><strong>Barman / Atordoar</strong><span>O alvo atordoado perde a ação da noite.</span></div></div>
+              <div class="event-item"><span class="event-icon">🦷</span><div><strong>Dentista / Silenciar</strong><span>O alvo fica silenciado para o dia seguinte, mas não perde a ação da noite.</span></div></div>
+              <div class="event-item"><span class="event-icon">✚</span><div><strong>Médico / Salvar</strong><span>Impede mortes contra o alvo naquela noite.</span></div></div>
+              <div class="event-item"><span class="event-icon">🗡</span><div><strong>Assassinar / Matar</strong><span>Se o alvo não estiver salvo, morre no fim da noite.</span></div></div>
+              <div class="event-item"><span class="event-icon">🗳</span><div><strong>Dia / votação</strong><span>Durante o dia, exatamente um jogador pode ser eliminado pela cidade.</span></div></div>
+            </div>
           </div>
-        </aside>
+        </article>
       </section>
 
-      <section class="panel tabs-panel">
-        <div class="tabs" role="tablist" aria-label="Dados do jogo">
-          <button class="tab-btn active" data-tab="funcoes" role="tab">🎭 Funções</button>
-          <button class="tab-btn" data-tab="personagens" role="tab">🕯️ Personagens</button>
-          <button class="tab-btn" data-tab="eventos" role="tab">📜 Eventos</button>
+      <section class="panel tabs-panel" id="relatorio">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">4. Relatório da noite</h2>
+            <p class="panel-subtitle">O texto público é o que o mestre comunica para a cidade.</p>
+          </div>
+          <button class="btn btn-ghost" id="copyPublicReportBtn">📋 Copiar relatório público</button>
         </div>
-
-        <div class="tab-content active" id="tab-funcoes">
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Função</th>
-                  <th>Time</th>
-                  <th>Mecânica</th>
-                  <th>Alvos</th>
-                  <th>Execução</th>
-                  <th>Uso</th>
-                  <th>Período</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td class="text-bad">Assassinos</td><td class="team-bad">Mal</td><td>Assassinar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-bad">Dentista</td><td class="team-bad">Mal</td><td>Silenciar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-bad">Barman</td><td class="team-bad">Mal</td><td>Atordoar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-bad">Terrorista</td><td class="team-bad">Mal</td><td>Matar</td><td>Único</td><td>Opcional</td><td>Único</td><td>Dia</td></tr>
-                <tr><td class="text-good">Médico/Enfermeira</td><td class="team-good">Bem</td><td>Salvar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-good">Detetives</td><td class="team-good">Bem</td><td>Investigar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-good">Justiceiro</td><td class="team-good">Bem</td><td>Assassinar</td><td>Único</td><td>Opcional</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-good">Sonâmbula</td><td class="team-good">Bem</td><td>Salvar</td><td>Múltiplos</td><td>Opcional</td><td>Único</td><td>Noite</td></tr>
-                <tr><td class="text-good">Legista</td><td class="team-good">Bem</td><td>Descobrir</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-good">Coveiro</td><td class="team-good">Bem</td><td>Reviver</td><td>Único</td><td>Opcional</td><td>Único</td><td>Noite</td></tr>
-                <tr><td class="text-solo">Psicopata</td><td class="team-solo">Solo</td><td>Assassinar</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-solo">Gambler</td><td class="team-solo">Solo</td><td>Marcação</td><td>Múltiplos</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-                <tr><td class="text-indep">Líder do Culto</td><td class="team-indep">Indep.</td><td>Converter</td><td>Único</td><td>Obrigatório</td><td>Contínuo</td><td>Noite</td></tr>
-              </tbody>
-            </table>
+        <div class="panel-body">
+          <div class="report-grid">
+            <div class="report-box public" id="publicReport"><h3>Relatório público</h3>Nenhuma noite resolvida ainda.</div>
+            <div class="report-box master" id="masterReport"><h3>Relatório do mestre</h3>Nenhuma noite resolvida ainda.</div>
           </div>
         </div>
+      </section>
 
-        <div class="tab-content" id="tab-personagens">
-          <div class="lower-grid">
+      <section class="grid-2" id="dia">
+        <article class="panel blue">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">5. Dia e votação</h2>
+              <p class="panel-subtitle">Depois do relatório público, a cidade discute e elimina um jogador.</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="inline-form">
+              <div class="field">
+                <label for="voteTarget">Jogador eliminado na votação</label>
+                <select id="voteTarget"></select>
+              </div>
+              <button class="btn btn-red" id="eliminateByVoteBtn">🗳 Eliminar</button>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-blue" id="nextNightBtn">☾ Próxima noite</button>
+              <button class="btn btn-ghost" id="checkVictoryBtn">♛ Verificar vitória</button>
+            </div>
+            <div class="help-box" id="victoryBox" style="margin-top:14px;">Condições de vitória serão avaliadas quando houver funções vinculadas.</div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-header">
+            <div>
+              <h2 class="panel-title">Estado da partida</h2>
+              <p class="panel-subtitle">Status atual dos jogadores.</p>
+            </div>
+          </div>
+          <div class="panel-body">
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>Personagem</th>
+                    <th>Jogador</th>
                     <th>Função</th>
                     <th>Time</th>
                     <th>Status</th>
+                    <th>Efeitos</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr><td class="text-good">Anthony Whitman</td><td>Coveiro</td><td class="team-good">Bem</td><td><span class="status-badge done">Vivo</span></td></tr>
-                  <tr><td class="text-good">Haval Brinston</td><td>Detetive</td><td class="team-good">Bem</td><td><span class="status-badge done">Vivo</span></td></tr>
-                  <tr><td class="text-good">Xue Liang</td><td>Enfermeira</td><td class="team-good">Bem</td><td><span class="status-badge done">Vivo</span></td></tr>
-                  <tr><td class="text-bad">Charles Magnus</td><td>Assassino</td><td class="team-bad">Mal</td><td><span class="status-badge done">Vivo</span></td></tr>
-                  <tr><td class="text-bad">Dmitry Smirnov</td><td>Barman</td><td class="team-bad">Mal</td><td><span class="status-badge done">Vivo</span></td></tr>
-                  <tr><td class="text-bad">Kevin V. Fischer</td><td>Dentista</td><td class="team-bad">Mal</td><td><span class="status-badge done">Vivo</span></td></tr>
-                  <tr><td class="text-solo">John Sponner</td><td>Psicopata</td><td class="team-solo">Solo</td><td><span class="status-badge done">Vivo</span></td></tr>
-                  <tr><td class="text-indep">Cain Grave</td><td>Líder do Culto</td><td class="team-indep">Indep.</td><td><span class="status-badge done">Vivo</span></td></tr>
-                </tbody>
+                <tbody id="playersStateBody"></tbody>
               </table>
             </div>
-            <div class="panel danger" style="box-shadow:none;">
-              <div class="panel-header">
-                <div>
-                  <h3 class="panel-title">Configuração crítica</h3>
-                  <p class="panel-subtitle">Quem está vivo, morto ou convertido muda todo o cálculo da rodada.</p>
-                </div>
-              </div>
-              <div class="panel-body">
-                <p style="margin:0;color:var(--muted);line-height:1.6;">Na versão final, esta área será conectada ao Google Sheets e ao motor de regras em PyScript para atualizar automaticamente o status da partida.</p>
-              </div>
-            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel tabs-panel" id="historico">
+        <div class="tabs" role="tablist" aria-label="Dados do jogo">
+          <button class="tab-btn active" data-tab="historicoRodadas" role="tab">📜 Histórico</button>
+          <button class="tab-btn" data-tab="funcoes" role="tab">🎭 Funções disponíveis</button>
+          <button class="tab-btn" data-tab="eventos" role="tab">✥ Eventos possíveis</button>
+        </div>
+
+        <div class="tab-content active" id="tab-historicoRodadas">
+          <div class="event-log" id="historyList"></div>
+        </div>
+
+        <div class="tab-content" id="tab-funcoes">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Função</th><th>Time</th><th>Mecânica</th><th>Alvos</th><th>Execução</th><th>Uso</th><th>Período</th></tr>
+              </thead>
+              <tbody id="rolesReferenceBody"></tbody>
+            </table>
           </div>
         </div>
 
         <div class="tab-content" id="tab-eventos">
-          <div class="events-grid">
-            <div class="event-chip red">☠ Morte</div>
-            <div class="event-chip blue">🛡 Salvo</div>
-            <div class="event-chip red">🔇 Silenciado</div>
-            <div class="event-chip blue">🔍 Investigado</div>
-            <div class="event-chip purple">◉ Convertido</div>
-            <div class="event-chip gold">⌛ Atordoado</div>
-            <div class="event-chip blue">✚ Revivido</div>
-            <div class="event-chip red">🗳 Eliminado na votação</div>
-            <div class="event-chip purple">☾ Ação bloqueada</div>
-            <div class="event-chip blue">📣 Resultado público</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel latest-panel">
-        <div class="panel-header">
-          <div>
-            <h2 class="panel-title">Últimos Eventos</h2>
-            <p class="panel-subtitle">Registro recente da partida</p>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="latest-list">
-            <div class="latest-item">
-              <span class="latest-icon">🛡</span>
-              <div>
-                <strong>Rodrigo foi salvo pelo Médico.</strong>
-                <span>Noite 2 • 22:15</span>
-              </div>
-            </div>
-            <div class="latest-item">
-              <span class="latest-icon">🔍</span>
-              <div>
-                <strong>João foi investigado pelo Detetive.</strong>
-                <span>Noite 2 • 22:14</span>
-              </div>
-            </div>
-            <div class="latest-item">
-              <span class="latest-icon">☠</span>
-              <div>
-                <strong>Nenhuma morte pública nesta noite.</strong>
-                <span>Noite 2 • 22:10</span>
-              </div>
-            </div>
-            <button class="history-btn">📜 Ver histórico</button>
+          <div class="grid-3">
+            <div class="help-box"><strong>☠ Morte</strong><br />Aplicada quando um ataque não é bloqueado por salvamento.</div>
+            <div class="help-box"><strong>🛡 Salvo</strong><br />Protege o alvo contra assassinatos da noite.</div>
+            <div class="help-box"><strong>🔇 Silenciado</strong><br />O jogador fica sem falar durante o próximo dia.</div>
+            <div class="help-box"><strong>🔍 Investigado</strong><br />O mestre vê a informação secreta no relatório interno.</div>
+            <div class="help-box"><strong>◉ Convertido</strong><br />O alvo passa a contar como convertido pelo culto.</div>
+            <div class="help-box"><strong>🗳 Votação</strong><br />A cidade elimina um jogador durante o dia.</div>
           </div>
         </div>
       </section>
@@ -1247,56 +824,671 @@
   </div>
 
   <script>
-    const sidebar = document.getElementById('sidebar');
-    const menuBtn = document.getElementById('menuBtn');
-    const overlay = document.getElementById('mobileOverlay');
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    const navItems = document.querySelectorAll('.nav-item');
-    const actionForm = document.getElementById('actionForm');
+    const ROLES = [
+      { id: 'assassino', name: 'Assassino', team: 'Mal', mechanic: 'Assassinar', targetType: 'alive-other', required: true, period: 'Noite', icon: '🗡', order: 50 },
+      { id: 'dentista', name: 'Dentista', team: 'Mal', mechanic: 'Silenciar', targetType: 'alive-other', required: true, period: 'Noite', icon: '🦷', order: 20 },
+      { id: 'barman', name: 'Barman', team: 'Mal', mechanic: 'Atordoar', targetType: 'alive-other', required: true, period: 'Noite', icon: '🍺', order: 10 },
+      { id: 'charlatao', name: 'Charlatão', team: 'Mal', mechanic: 'Confundir', targetType: 'alive-other', required: false, period: 'Noite', icon: '🎭', order: 25 },
+      { id: 'terrorista', name: 'Terrorista', team: 'Mal', mechanic: 'Matar', targetType: 'alive-other', required: false, period: 'Dia', icon: '💣', order: 50 },
+      { id: 'medico', name: 'Médico/Enfermeira', team: 'Bem', mechanic: 'Salvar', targetType: 'alive-any', required: true, period: 'Noite', icon: '✚', order: 30 },
+      { id: 'detetive', name: 'Detetive', team: 'Bem', mechanic: 'Investigar', targetType: 'alive-other', required: true, period: 'Noite', icon: '🔍', order: 40 },
+      { id: 'justiceiro', name: 'Justiceiro', team: 'Bem', mechanic: 'Assassinar', targetType: 'alive-other', required: false, period: 'Noite', icon: '⚔', order: 50 },
+      { id: 'sonambula', name: 'Sonâmbula', team: 'Bem', mechanic: 'Salvar', targetType: 'alive-other', required: false, period: 'Noite', icon: '🌙', order: 30 },
+      { id: 'velhinha', name: 'Velhinha', team: 'Bem', mechanic: 'Resistir', targetType: 'none', required: false, period: 'Noite', icon: '🧓', order: 5 },
+      { id: 'legista', name: 'Legista', team: 'Bem', mechanic: 'Descobrir', targetType: 'dead', required: false, period: 'Noite', icon: '⚕', order: 40 },
+      { id: 'coveiro', name: 'Coveiro', team: 'Bem', mechanic: 'Reviver', targetType: 'dead', required: false, period: 'Noite', icon: '⛏', order: 60 },
+      { id: 'psicopata', name: 'Psicopata', team: 'Solo', mechanic: 'Assassinar', targetType: 'alive-other', required: true, period: 'Noite', icon: '◎', order: 50 },
+      { id: 'gambler', name: 'Gambler', team: 'Solo', mechanic: 'Marcação', targetType: 'alive-other', required: true, period: 'Noite', icon: '♦', order: 40 },
+      { id: 'velhote', name: 'Velhote', team: 'Mal', mechanic: 'Especial', targetType: 'none', required: false, period: 'Noite', icon: '♜', order: 5 },
+      { id: 'lider_culto', name: 'Líder do Culto', team: 'Independente', mechanic: 'Converter', targetType: 'alive-other', required: true, period: 'Noite', icon: '☼', order: 45 },
+      { id: 'cidadao', name: 'Cidadão', team: 'Bem', mechanic: 'Nenhuma', targetType: 'none', required: false, period: 'Dia', icon: '👤', order: 99 }
+    ];
 
-    function openMenu() {
+    const STORAGE_KEY = 'cidade_dorme_game_state_v2';
+
+    const initialState = {
+      gameName: '',
+      status: 'preparacao',
+      phase: 'Preparação',
+      round: 0,
+      players: [],
+      nightActions: [],
+      publicReport: 'Nenhuma noite resolvida ainda.',
+      masterReport: 'Nenhuma noite resolvida ainda.',
+      history: []
+    };
+
+    let state = loadState();
+
+    const $ = (id) => document.getElementById(id);
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(initialState);
+      } catch {
+        return structuredClone(initialState);
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getRole(roleId) {
+      return ROLES.find((role) => role.id === roleId) || null;
+    }
+
+    function getPlayer(playerId) {
+      return state.players.find((player) => player.id === playerId) || null;
+    }
+
+    function normalizeName(name) {
+      return name.trim().replace(/\s+/g, ' ');
+    }
+
+    function teamClass(team) {
+      if (team === 'Bem') return 'team-good';
+      if (team === 'Mal') return 'team-bad';
+      if (team === 'Solo') return 'team-solo';
+      if (team === 'Independente') return 'team-indep';
+      return '';
+    }
+
+    function teamTextClass(team) {
+      if (team === 'Bem') return 'text-good';
+      if (team === 'Mal') return 'text-bad';
+      if (team === 'Solo') return 'text-solo';
+      if (team === 'Independente') return 'text-indep';
+      return 'text-muted';
+    }
+
+    function getCurrentTeam(player) {
+      if (!player) return 'Não definido';
+      if (player.converted) return 'Independente';
+      const role = getRole(player.roleId);
+      return role ? role.team : 'Não definido';
+    }
+
+    function createGame() {
+      const names = $('playersTextarea').value
+        .split('\n')
+        .map(normalizeName)
+        .filter(Boolean);
+
+      const uniqueNames = [...new Set(names)];
+
+      if (uniqueNames.length < 3) {
+        alert('Cadastre pelo menos 3 jogadores para iniciar uma partida.');
+        return;
+      }
+
+      state = structuredClone(initialState);
+      state.gameName = $('gameName').value.trim() || 'Cidade Dorme';
+      state.status = 'em_andamento';
+      state.phase = 'Vincular cartas';
+      state.round = 0;
+      state.players = uniqueNames.map((name, index) => ({
+        id: `p_${Date.now()}_${index}`,
+        name,
+        roleId: '',
+        alive: true,
+        silenced: false,
+        stunned: false,
+        protected: false,
+        converted: false,
+        killedBy: '',
+        notes: ''
+      }));
+      state.history.unshift({ type: 'game_created', round: 0, text: `Partida criada com ${uniqueNames.length} jogadores.`, createdAt: new Date().toLocaleString('pt-BR') });
+      saveState();
+      render();
+      location.hash = '#cartas';
+    }
+
+    function resetGame() {
+      const ok = confirm('Deseja realmente limpar a partida atual?');
+      if (!ok) return;
+      state = structuredClone(initialState);
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    }
+
+    function saveRoleAssignments() {
+      if (!state.players.length) {
+        alert('Crie a partida antes de vincular cartas.');
+        return;
+      }
+
+      state.players = state.players.map((player) => {
+        const select = document.querySelector(`[data-role-select="${player.id}"]`);
+        return { ...player, roleId: select ? select.value : player.roleId };
+      });
+
+      const withoutRole = state.players.filter((player) => !player.roleId);
+      if (withoutRole.length) {
+        alert(`Ainda existem jogadores sem função: ${withoutRole.map((p) => p.name).join(', ')}`);
+        saveState();
+        render();
+        return;
+      }
+
+      state.phase = 'Noite';
+      if (state.round === 0) state.round = 1;
+      state.history.unshift({ type: 'roles_saved', round: state.round, text: 'Cartas/funções vinculadas aos jogadores.', createdAt: new Date().toLocaleString('pt-BR') });
+      saveState();
+      render();
+      location.hash = '#noite';
+    }
+
+    function getTargetOptions(role, actorId) {
+      if (!role || role.targetType === 'none') return [];
+      if (role.targetType === 'dead') return state.players.filter((player) => !player.alive);
+      if (role.targetType === 'alive-any') return state.players.filter((player) => player.alive);
+      if (role.targetType === 'alive-other') return state.players.filter((player) => player.alive && player.id !== actorId);
+      return state.players.filter((player) => player.alive);
+    }
+
+    function startNight() {
+      const withoutRole = state.players.filter((player) => !player.roleId);
+      if (!state.players.length) {
+        alert('Crie a partida primeiro.');
+        return;
+      }
+      if (withoutRole.length) {
+        alert('Vincule todas as cartas antes de iniciar a noite.');
+        return;
+      }
+
+      state.phase = 'Noite';
+      if (state.round === 0) state.round = 1;
+
+      state.players = state.players.map((player) => ({
+        ...player,
+        protected: false,
+        stunned: false
+      }));
+
+      state.nightActions = state.players
+        .filter((player) => player.alive)
+        .map((player) => ({ player, role: getRole(player.roleId) }))
+        .filter(({ role }) => role && role.period === 'Noite' && role.mechanic !== 'Nenhuma')
+        .sort((a, b) => a.role.order - b.role.order)
+        .map(({ player, role }) => ({
+          id: `a_${state.round}_${player.id}`,
+          round: state.round,
+          actorId: player.id,
+          roleId: role.id,
+          mechanic: role.mechanic,
+          targetId: '',
+          skipped: false,
+          resolved: false,
+          result: 'Pendente'
+        }));
+
+      state.publicReport = 'Noite iniciada. Registre as ações e clique em Resolver noite.';
+      state.masterReport = 'Aguardando resolução da noite.';
+      state.history.unshift({ type: 'night_started', round: state.round, text: `Noite ${state.round} iniciada.`, createdAt: new Date().toLocaleString('pt-BR') });
+      saveState();
+      render();
+    }
+
+    function readNightActionsFromUI() {
+      state.nightActions = state.nightActions.map((action) => {
+        const targetSelect = document.querySelector(`[data-target-select="${action.id}"]`);
+        const skipInput = document.querySelector(`[data-skip-action="${action.id}"]`);
+        return {
+          ...action,
+          targetId: targetSelect ? targetSelect.value : action.targetId,
+          skipped: skipInput ? skipInput.checked : action.skipped
+        };
+      });
+    }
+
+    function resolveNight() {
+      if (!state.nightActions.length) {
+        alert('Inicie a noite antes de resolver.');
+        return;
+      }
+
+      readNightActionsFromUI();
+
+      const requiredMissing = state.nightActions.filter((action) => {
+        const role = getRole(action.roleId);
+        return role && role.required && role.targetType !== 'none' && !action.skipped && !action.targetId;
+      });
+
+      if (requiredMissing.length) {
+        alert(`Ações obrigatórias sem alvo: ${requiredMissing.map((a) => getPlayer(a.actorId)?.name).join(', ')}`);
+        return;
+      }
+
+      const publicLines = [];
+      const masterLines = [];
+      const events = [];
+      const protectedIds = new Set();
+      const stunnedIds = new Set();
+      const silencedIds = new Set();
+      const deathAttempts = [];
+      const revivedIds = new Set();
+      const convertedIds = new Set();
+
+      const activeActions = state.nightActions
+        .filter((action) => !action.skipped)
+        .map((action) => ({ ...action, role: getRole(action.roleId), actor: getPlayer(action.actorId), target: getPlayer(action.targetId) }))
+        .filter((action) => action.role && action.actor && action.actor.alive);
+
+      for (const action of activeActions.filter((a) => a.role.mechanic === 'Atordoar')) {
+        if (!action.target) continue;
+        stunnedIds.add(action.target.id);
+        masterLines.push(`${action.actor.name} (${action.role.name}) atordoou ${action.target.name}. A ação de ${action.target.name} foi bloqueada.`);
+        events.push({ icon: '🍺', text: `${action.target.name} foi atordoado.`, detail: `Noite ${state.round}` });
+      }
+
+      const effectiveActions = activeActions.filter((action) => !stunnedIds.has(action.actor.id));
+      const blockedActions = activeActions.filter((action) => stunnedIds.has(action.actor.id));
+
+      for (const action of blockedActions) {
+        masterLines.push(`${action.actor.name} (${action.role.name}) não conseguiu agir porque estava atordoado.`);
+      }
+
+      for (const action of effectiveActions) {
+        if (!action.target && action.role.targetType !== 'none') continue;
+
+        switch (action.role.mechanic) {
+          case 'Salvar':
+            protectedIds.add(action.target.id);
+            masterLines.push(`${action.actor.name} (${action.role.name}) protegeu ${action.target.name}.`);
+            events.push({ icon: '🛡', text: `${action.target.name} recebeu proteção.`, detail: `Noite ${state.round}` });
+            break;
+
+          case 'Silenciar':
+            silencedIds.add(action.target.id);
+            masterLines.push(`${action.actor.name} (${action.role.name}) silenciou ${action.target.name}.`);
+            events.push({ icon: '🔇', text: `${action.target.name} foi silenciado.`, detail: `Noite ${state.round}` });
+            break;
+
+          case 'Investigar':
+            masterLines.push(`${action.actor.name} (${action.role.name}) investigou ${action.target.name}. Resultado: time ${getCurrentTeam(action.target)}.`);
+            events.push({ icon: '🔍', text: `${action.target.name} foi investigado.`, detail: `Noite ${state.round}` });
+            break;
+
+          case 'Descobrir':
+            masterLines.push(`${action.actor.name} (${action.role.name}) analisou ${action.target.name}. Função descoberta: ${getRole(action.target.roleId)?.name || 'não definida'}.`);
+            events.push({ icon: '⚕', text: `${action.actor.name} analisou um morto.`, detail: `Noite ${state.round}` });
+            break;
+
+          case 'Converter':
+            convertedIds.add(action.target.id);
+            masterLines.push(`${action.actor.name} (${action.role.name}) converteu ${action.target.name} para o culto.`);
+            events.push({ icon: '☼', text: `${action.target.name} foi convertido.`, detail: `Noite ${state.round}` });
+            break;
+
+          case 'Reviver':
+            revivedIds.add(action.target.id);
+            masterLines.push(`${action.actor.name} (${action.role.name}) reviveu ${action.target.name}.`);
+            events.push({ icon: '✚', text: `${action.target.name} foi revivido.`, detail: `Noite ${state.round}` });
+            break;
+
+          case 'Assassinar':
+          case 'Matar':
+            deathAttempts.push(action);
+            masterLines.push(`${action.actor.name} (${action.role.name}) tentou matar ${action.target.name}.`);
+            break;
+
+          case 'Marcação':
+            masterLines.push(`${action.actor.name} (${action.role.name}) marcou ${action.target.name}.`);
+            events.push({ icon: '♦', text: `${action.target.name} foi marcado.`, detail: `Noite ${state.round}` });
+            break;
+
+          case 'Confundir':
+            masterLines.push(`${action.actor.name} (${action.role.name}) confundiu ${action.target.name}.`);
+            events.push({ icon: '🎭', text: `${action.target.name} foi confundido.`, detail: `Noite ${state.round}` });
+            break;
+
+          default:
+            masterLines.push(`${action.actor.name} (${action.role.name}) realizou ação especial.`);
+        }
+      }
+
+      const killedIds = new Set();
+      const savedFromDeathIds = new Set();
+
+      for (const attempt of deathAttempts) {
+        if (!attempt.target || !attempt.target.alive) continue;
+        if (protectedIds.has(attempt.target.id)) {
+          savedFromDeathIds.add(attempt.target.id);
+          masterLines.push(`${attempt.target.name} seria morto por ${attempt.actor.name}, mas foi salvo.`);
+        } else {
+          killedIds.add(attempt.target.id);
+          masterLines.push(`${attempt.target.name} morreu por ação de ${attempt.actor.name} (${attempt.role.name}).`);
+        }
+      }
+
+      state.players = state.players.map((player) => {
+        const wasKilled = killedIds.has(player.id);
+        const wasRevived = revivedIds.has(player.id);
+        return {
+          ...player,
+          alive: wasRevived ? true : wasKilled ? false : player.alive,
+          silenced: silencedIds.has(player.id),
+          stunned: stunnedIds.has(player.id),
+          protected: protectedIds.has(player.id),
+          converted: convertedIds.has(player.id) ? true : player.converted,
+          killedBy: wasKilled ? 'Noite' : player.killedBy
+        };
+      });
+
+      const killedNames = [...killedIds].map((id) => getPlayer(id)?.name).filter(Boolean);
+      const savedNames = [...savedFromDeathIds].map((id) => getPlayer(id)?.name).filter(Boolean);
+      const silencedNames = [...silencedIds].map((id) => getPlayer(id)?.name).filter(Boolean);
+      const revivedNames = [...revivedIds].map((id) => getPlayer(id)?.name).filter(Boolean);
+
+      if (killedNames.length) publicLines.push(`☠ Mortes da noite: ${killedNames.join(', ')}.`);
+      else publicLines.push('☠ Nenhuma morte pública nesta noite.');
+
+      if (savedNames.length) publicLines.push(`🛡 Alguém foi salvo durante a noite.`);
+      if (silencedNames.length) publicLines.push(`🔇 Jogadores silenciados para o dia: ${silencedNames.join(', ')}.`);
+      if (revivedNames.length) publicLines.push(`✚ Jogadores revividos: ${revivedNames.join(', ')}.`);
+      if (!savedNames.length && !silencedNames.length && !revivedNames.length && !killedNames.length) publicLines.push('A cidade acordou em silêncio, sem acontecimentos públicos relevantes.');
+
+      state.nightActions = state.nightActions.map((action) => ({ ...action, resolved: true, result: 'Resolvido' }));
+      state.phase = 'Dia';
+      state.publicReport = `Relatório público — Noite ${state.round}\n\n${publicLines.join('\n')}`;
+      state.masterReport = `Relatório secreto do mestre — Noite ${state.round}\n\n${masterLines.length ? masterLines.join('\n') : 'Nenhuma ação relevante foi registrada.'}`;
+      state.history.unshift({ type: 'night_resolved', round: state.round, text: `Noite ${state.round} resolvida.`, publicReport: state.publicReport, masterReport: state.masterReport, events, createdAt: new Date().toLocaleString('pt-BR') });
+      saveState();
+      render();
+      location.hash = '#relatorio';
+    }
+
+    function eliminateByVote() {
+      const targetId = $('voteTarget').value;
+      if (!targetId) {
+        alert('Selecione o jogador eliminado pela votação.');
+        return;
+      }
+
+      const target = getPlayer(targetId);
+      if (!target || !target.alive) return;
+
+      state.players = state.players.map((player) => player.id === targetId ? { ...player, alive: false, killedBy: 'Votação' } : player);
+      state.phase = 'Dia finalizado';
+      state.history.unshift({ type: 'vote', round: state.round, text: `${target.name} foi eliminado pela votação da cidade.`, createdAt: new Date().toLocaleString('pt-BR') });
+      saveState();
+      render();
+      checkVictory();
+    }
+
+    function nextNight() {
+      if (!state.players.length) {
+        alert('Crie a partida primeiro.');
+        return;
+      }
+      state.round += 1;
+      state.phase = 'Noite';
+      state.nightActions = [];
+      state.players = state.players.map((player) => ({ ...player, silenced: false, stunned: false, protected: false }));
+      state.publicReport = `Rodada ${state.round} preparada. Inicie a noite para gerar ações.`;
+      state.masterReport = 'Aguardando ações da nova noite.';
+      state.history.unshift({ type: 'next_night', round: state.round, text: `Rodada ${state.round} preparada.`, createdAt: new Date().toLocaleString('pt-BR') });
+      saveState();
+      render();
+      location.hash = '#noite';
+    }
+
+    function checkVictory() {
+      const alive = state.players.filter((player) => player.alive);
+      const good = alive.filter((player) => getCurrentTeam(player) === 'Bem');
+      const bad = alive.filter((player) => getCurrentTeam(player) === 'Mal');
+      const solo = alive.filter((player) => getCurrentTeam(player) === 'Solo');
+      const indep = alive.filter((player) => getCurrentTeam(player) === 'Independente');
+
+      let message = 'Nenhuma condição de vitória foi atingida ainda.';
+
+      if (alive.length === 0) {
+        message = 'Empate: nenhum jogador ficou vivo.';
+      } else if (bad.length === 0 && solo.length === 0 && indep.length === 0) {
+        message = 'Vitória do Bem: todos os times adversários foram eliminados.';
+      } else if (bad.length >= good.length + solo.length + indep.length) {
+        message = 'Vitória do Mal: o Time Mal atingiu maioria entre os vivos.';
+      } else if (solo.length === 1 && alive.length === 1) {
+        message = `Vitória Solo: ${solo[0].name} foi o último sobrevivente.`;
+      } else if (indep.length > 0 && indep.length === alive.length) {
+        message = 'Vitória Independente/Culto: todos os vivos estão convertidos ou são independentes.';
+      }
+
+      $('victoryBox').textContent = message;
+      return message;
+    }
+
+    function copyPublicReport() {
+      const text = state.publicReport || '';
+      navigator.clipboard?.writeText(text).then(() => alert('Relatório público copiado.'));
+    }
+
+    function renderAssignments() {
+      const body = $('assignmentsBody');
+      if (!state.players.length) {
+        body.innerHTML = `<tr><td colspan="5"><div class="empty-state">Crie a partida para liberar o vínculo das cartas.</div></td></tr>`;
+        return;
+      }
+
+      body.innerHTML = state.players.map((player) => {
+        const role = getRole(player.roleId);
+        const options = [`<option value="">Selecione</option>`]
+          .concat(ROLES.map((item) => `<option value="${item.id}" ${player.roleId === item.id ? 'selected' : ''}>${item.name}</option>`))
+          .join('');
+        return `
+          <tr>
+            <td><strong>${player.name}</strong></td>
+            <td><select data-role-select="${player.id}">${options}</select></td>
+            <td class="${teamClass(role?.team)}">${role?.team || '—'}</td>
+            <td>${role ? `${role.icon} ${role.mechanic}` : '—'}</td>
+            <td>${player.alive ? '<span class="status-badge done">Vivo</span>' : '<span class="status-badge dead">Morto</span>'}</td>
+          </tr>`;
+      }).join('');
+
+      body.querySelectorAll('select').forEach((select) => {
+        select.addEventListener('change', () => {
+          const playerId = select.dataset.roleSelect;
+          const player = getPlayer(playerId);
+          if (!player) return;
+          player.roleId = select.value;
+          saveState();
+          render();
+        });
+      });
+    }
+
+    function renderNightActions() {
+      const body = $('nightActionsBody');
+      if (!state.nightActions.length) {
+        body.innerHTML = `<tr><td colspan="5"><div class="empty-state">Clique em “Iniciar noite” para gerar as ações das funções vivas.</div></td></tr>`;
+        return;
+      }
+
+      body.innerHTML = state.nightActions.map((action) => {
+        const actor = getPlayer(action.actorId);
+        const role = getRole(action.roleId);
+        const targets = getTargetOptions(role, action.actorId);
+        const isNoTarget = !targets.length || role.targetType === 'none';
+        const options = [`<option value="">${isNoTarget ? 'Sem alvo necessário' : 'Selecione o alvo'}</option>`]
+          .concat(targets.map((player) => `<option value="${player.id}" ${action.targetId === player.id ? 'selected' : ''}>${player.name}</option>`))
+          .join('');
+        const status = action.resolved ? '<span class="status-badge done">Resolvido</span>' : '<span class="status-badge pending">Pendente</span>';
+        const requiredLabel = role.required ? '<span class="chip red">Obrigatório</span>' : '<span class="chip blue">Opcional</span>';
+        return `
+          <tr>
+            <td><strong>${actor?.name || '—'}</strong></td>
+            <td><span class="role-line ${teamTextClass(role?.team)}"><span class="role-ico">${role?.icon || '•'}</span>${role?.name || '—'}</span></td>
+            <td>${role?.mechanic || '—'} ${requiredLabel}</td>
+            <td>
+              <select data-target-select="${action.id}" ${isNoTarget ? 'disabled' : ''}>${options}</select>
+              ${!role.required ? `<label style="display:flex;gap:8px;align-items:center;margin-top:8px;color:var(--muted);font-size:.82rem;"><input type="checkbox" data-skip-action="${action.id}" ${action.skipped ? 'checked' : ''} style="width:auto;min-height:auto;" /> Não usar ação</label>` : ''}
+            </td>
+            <td>${status}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderPlayersState() {
+      const body = $('playersStateBody');
+      if (!state.players.length) {
+        body.innerHTML = `<tr><td colspan="5"><div class="empty-state">Nenhuma partida criada.</div></td></tr>`;
+        return;
+      }
+
+      body.innerHTML = state.players.map((player) => {
+        const role = getRole(player.roleId);
+        const effects = [];
+        if (player.protected) effects.push('🛡 salvo/protegido');
+        if (player.silenced) effects.push('🔇 silenciado');
+        if (player.stunned) effects.push('🍺 atordoado');
+        if (player.converted) effects.push('☼ convertido');
+        return `
+          <tr>
+            <td><strong>${player.name}</strong></td>
+            <td class="${teamTextClass(role?.team)}">${role?.name || 'Não definida'}</td>
+            <td class="${teamClass(getCurrentTeam(player))}">${getCurrentTeam(player)}</td>
+            <td>${player.alive ? '<span class="status-badge done">Vivo</span>' : '<span class="status-badge dead">Morto</span>'}</td>
+            <td>${effects.length ? effects.join(', ') : '<span class="text-muted">Sem efeitos</span>'}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderVoteOptions() {
+      const select = $('voteTarget');
+      const alive = state.players.filter((player) => player.alive);
+      select.innerHTML = [`<option value="">Selecione</option>`]
+        .concat(alive.map((player) => `<option value="${player.id}">${player.name}</option>`))
+        .join('');
+    }
+
+    function renderReports() {
+      $('publicReport').innerHTML = `<h3>Relatório público</h3>${escapeHtml(state.publicReport || 'Nenhuma noite resolvida ainda.')}`;
+      $('masterReport').innerHTML = `<h3>Relatório do mestre</h3>${escapeHtml(state.masterReport || 'Nenhuma noite resolvida ainda.')}`;
+    }
+
+    function renderHistory() {
+      const list = $('historyList');
+      if (!state.history.length) {
+        list.innerHTML = `<div class="empty-state">O histórico da partida aparecerá aqui.</div>`;
+        return;
+      }
+      list.innerHTML = state.history.map((item) => `
+        <div class="event-item">
+          <span class="event-icon">${item.type === 'night_resolved' ? '📜' : item.type === 'vote' ? '🗳' : '☾'}</span>
+          <div>
+            <strong>${escapeHtml(item.text)}</strong>
+            <span>Rodada ${item.round} • ${item.createdAt}</span>
+          </div>
+        </div>`).join('');
+    }
+
+    function renderRolesReference() {
+      $('rolesReferenceBody').innerHTML = ROLES.map((role) => `
+        <tr>
+          <td class="${teamTextClass(role.team)}">${role.icon} ${role.name}</td>
+          <td class="${teamClass(role.team)}">${role.team}</td>
+          <td>${role.mechanic}</td>
+          <td>${role.targetType === 'none' ? 'Nenhum' : role.targetType === 'dead' ? 'Morto' : 'Vivo'}</td>
+          <td>${role.required ? 'Obrigatório' : 'Opcional'}</td>
+          <td>${role.name === 'Coveiro' || role.name === 'Sonâmbula' ? 'Único' : 'Contínuo'}</td>
+          <td>${role.period}</td>
+        </tr>`).join('');
+    }
+
+    function renderMetrics() {
+      const alive = state.players.filter((player) => player.alive);
+      const dead = state.players.filter((player) => !player.alive);
+      const good = alive.filter((player) => getCurrentTeam(player) === 'Bem');
+      const bad = alive.filter((player) => getCurrentTeam(player) === 'Mal');
+      const other = alive.filter((player) => ['Solo', 'Independente'].includes(getCurrentTeam(player)));
+
+      $('metricAlive').textContent = alive.length;
+      $('metricDead').textContent = dead.length;
+      $('metricGood').textContent = good.length;
+      $('metricBad').textContent = bad.length;
+      $('metricOther').textContent = other.length;
+      $('playersCountChip').textContent = `${state.players.length} jogador${state.players.length === 1 ? '' : 'es'}`;
+      $('gameStatusChip').textContent = state.status === 'em_andamento' ? '⌁ Partida em andamento' : '⌁ Partida não iniciada';
+      $('roundChip').textContent = `✺ Rodada ${state.round}`;
+      $('phaseChip').textContent = `☾ Fase: ${state.phase}`;
+    }
+
+    function renderPlayerTextarea() {
+      if (!$('playersTextarea').value && state.players.length) {
+        $('playersTextarea').value = state.players.map((player) => player.name).join('\n');
+      }
+      if (!$('gameName').value && state.gameName) $('gameName').value = state.gameName;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;')
+        .replaceAll('\n', '<br />');
+    }
+
+    function render() {
+      renderMetrics();
+      renderPlayerTextarea();
+      renderAssignments();
+      renderNightActions();
+      renderPlayersState();
+      renderVoteOptions();
+      renderReports();
+      renderHistory();
+      renderRolesReference();
+      checkVictory();
+    }
+
+    const sidebar = $('sidebar');
+    const menuBtn = $('menuBtn');
+    const overlay = $('mobileOverlay');
+
+    menuBtn.addEventListener('click', () => {
       sidebar.classList.add('open');
       overlay.classList.add('active');
-    }
-
-    function closeMenu() {
+    });
+    overlay.addEventListener('click', () => {
       sidebar.classList.remove('open');
       overlay.classList.remove('active');
-    }
+    });
 
-    menuBtn.addEventListener('click', openMenu);
-    overlay.addEventListener('click', closeMenu);
-
-    navItems.forEach((item) => {
+    document.querySelectorAll('.nav-item').forEach((item) => {
       item.addEventListener('click', () => {
-        navItems.forEach((nav) => nav.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach((nav) => nav.classList.remove('active'));
         item.classList.add('active');
-        closeMenu();
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
       });
     });
 
-    tabButtons.forEach((button) => {
+    document.querySelectorAll('.tab-btn').forEach((button) => {
       button.addEventListener('click', () => {
         const target = button.dataset.tab;
-        tabButtons.forEach((btn) => btn.classList.remove('active'));
-        tabContents.forEach((content) => content.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach((btn) => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach((content) => content.classList.remove('active'));
         button.classList.add('active');
-        document.getElementById(`tab-${target}`).classList.add('active');
+        $(`tab-${target}`).classList.add('active');
       });
     });
 
-    actionForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const actor = document.getElementById('actor').value;
-      const role = document.getElementById('role').value;
-      const target = document.getElementById('target').value;
-      const result = document.getElementById('result').value;
+    $('createGameBtn').addEventListener('click', createGame);
+    $('resetGameBtn').addEventListener('click', resetGame);
+    $('saveRolesBtn').addEventListener('click', saveRoleAssignments);
+    $('startNightBtn').addEventListener('click', startNight);
+    $('resolveNightBtn').addEventListener('click', resolveNight);
+    $('eliminateByVoteBtn').addEventListener('click', eliminateByVote);
+    $('nextNightBtn').addEventListener('click', nextNight);
+    $('checkVictoryBtn').addEventListener('click', checkVictory);
+    $('copyPublicReportBtn').addEventListener('click', copyPublicReport);
 
-      const message = `Ação registrada: ${actor} / ${role} / ${target} / ${result}`;
-      console.log(message);
-      alert(message);
-    });
+    render();
   </script>
 </body>
 </html>
